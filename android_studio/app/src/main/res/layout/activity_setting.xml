@@ -19,18 +19,35 @@
             android:textColor="@android:color/black"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:layout_marginStart="20dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="19dp" />
+            android:layout_marginTop="27dp" />
 
-        <ListView
-            android:id="@+id/applist"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="22dp"
+            android:layout_height="350dp"
+            android:layout_marginTop="13dp"
             android:layout_below="@+id/text1"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <ListView
+                    android:id="@+id/applist"
+                    android:layout_width="match_parent"
+                    android:layout_height="800dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/text1"
+                    android:layout_marginTop="22dp" />
+
+
+            </LinearLayout>
+        </ScrollView>
 
     </RelativeLayout>
 

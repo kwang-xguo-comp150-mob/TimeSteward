@@ -11,9 +11,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -51,6 +53,12 @@ public class SettingActivity extends Activity {
                 R.layout.activity_applistview, appsNames);
 
         ListView listView = (ListView)findViewById(R.id.applist);
+        /* set the height of the listView */
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)listView.getLayoutParams();
+        System.out.print(appsNames.size());
+        lp.height = 100 * appsNames.size();
+        listView.setLayoutParams(lp);
+
         listView.setAdapter(adapter);
     }
 }
