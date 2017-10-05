@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +54,6 @@ public class SettingActivity extends Activity {
 
         ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 R.layout.activity_applistview, appsNames);
-
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)listView.getLayoutParams();
@@ -60,5 +62,18 @@ public class SettingActivity extends Activity {
         listView.setLayoutParams(lp);
 
         listView.setAdapter(adapter);
+        final TextView tv = (TextView) findViewById(R.id.tv);
+        NumberPicker np = (NumberPicker) findViewById(R.id.np);
+        //Set TextView text color
+        //tv.setTextColor(Color.parseColor("#ffd32b3b"));
+
+        //Populate NumberPicker values from minimum and maximum value range
+        //Set the minimum value of NumberPicker
+        np.setMinValue(0);
+        //Specify the maximum value/number of NumberPicker
+        np.setMaxValue(1440);
+
+        //Gets whether the selector wheel wraps when reaching the min/max value.
+        np.setWrapSelectorWheel(true);
     }
 }

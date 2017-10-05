@@ -14,22 +14,22 @@
             android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="casual"
             android:text="Select Apps"
             android:textColor="@android:color/black"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginStart="20dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="27dp" />
+            android:textStyle="bold" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:layout_marginTop="13dp"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/text1"
-            android:layout_alignParentStart="true">
+            android:id="@+id/scrollView2">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,17 +37,49 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
+
                 <ListView
                     android:id="@+id/applist"
                     android:layout_width="match_parent"
                     android:layout_height="800dp"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/text1"
-                    android:layout_marginTop="22dp" />
-
-
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
         </ScrollView>
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="casual"
+            android:text="Select a usage limit time"
+            android:textColor="@android:color/black"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_below="@+id/scrollView2"
+            android:layout_alignStart="@+id/text1" />
+
+        <NumberPicker
+            android:id="@+id/np"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/tv"
+            android:layout_alignEnd="@+id/tv" />
+
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/np"
+            android:layout_marginTop="20dp"
+            android:fontFamily="casual"
+            android:text="confirm"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
