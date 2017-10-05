@@ -49,12 +49,12 @@
         </ScrollView>
 
         <TextView
-            android:id="@+id/tv"
+            android:id="@+id/set_time_limit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="casual"
-            android:text="Select a usage limit time"
+            android:text="Set Time Limit"
             android:textColor="@android:color/black"
             android:textSize="24dp"
             android:textStyle="bold"
@@ -66,8 +66,7 @@
             android:layout_width="300dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/tv"
-            android:layout_alignEnd="@+id/tv" />
+            android:layout_below="@+id/set_time_limit" />
 
         <Button
             android:id="@+id/confirm_button"
