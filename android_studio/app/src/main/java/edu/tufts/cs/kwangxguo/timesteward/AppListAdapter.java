@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,8 +18,8 @@ import java.util.List;
  * Created by Guo on 10/5/17.
  */
 
-public class AppListAdapter extends ArrayAdapter {
-    PackageManager pm;
+class AppListAdapter extends ArrayAdapter {
+    private PackageManager pm;
     public AppListAdapter(Context context, List<ApplicationInfo> appInfoList, PackageManager pm) {
         super(context, 0, appInfoList);
         this.pm = pm;
@@ -40,6 +41,11 @@ public class AppListAdapter extends ArrayAdapter {
         appIcon.setImageDrawable(appIconDrawable);
         appName.setText(appNameString);
 
+        // deal with check box
+
+
         return convertView;
     }
+
+
 }

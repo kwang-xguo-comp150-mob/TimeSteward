@@ -20,4 +20,15 @@
         android:textStyle="bold">
     </TextView>
 
+    <CheckBox
+        android:id="@+id/app_checkbox"
+        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:checked="false"
+        android:contentDescription="@string/select_apps"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple" />
+
 </LinearLayout>
