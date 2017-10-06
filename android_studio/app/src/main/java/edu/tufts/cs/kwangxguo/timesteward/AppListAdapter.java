@@ -23,6 +23,7 @@ import java.util.Set;
  */
 
 class AppListAdapter extends ArrayAdapter {
+
     private PackageManager pm;
     private Set<ApplicationInfo> selectedAppSet;
     public AppListAdapter(Context context, List<ApplicationInfo> appInfoList, PackageManager pm, Set<ApplicationInfo> set) {
@@ -53,6 +54,5 @@ class AppListAdapter extends ArrayAdapter {
         cBox.setOnCheckedChangeListener(new AppCheckBoxListener(selectedAppSet));
         return convertView;
     }
-
 
 }

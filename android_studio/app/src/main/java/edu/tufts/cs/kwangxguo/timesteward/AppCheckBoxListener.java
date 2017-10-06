@@ -2,6 +2,7 @@ package edu.tufts.cs.kwangxguo.timesteward;
 
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import java.util.Set;
@@ -15,11 +16,17 @@ class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
     public AppCheckBoxListener(Set<ApplicationInfo> selectedAppSet) {
         this.selectedAppSet = selectedAppSet;
     }
+
     @Override
     public void onCheckedChanged(CompoundButton cBox, boolean checked) {
         if (checked) {
             selectedAppSet.add((ApplicationInfo) cBox.getTag());
             Log.d("cBox", "onCheckedChanged: app: " + cBox.getTag());
         }
+        else {
+            selectedAppSet.remove((ApplicationInfo) cBox.getTag());
+            Log.d("cBox", "onCheckedChanged: removeapp: " + cBox.getTag());
+        }
     }
+
 }

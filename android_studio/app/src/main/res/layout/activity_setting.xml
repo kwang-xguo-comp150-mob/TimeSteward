@@ -70,15 +70,29 @@
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/np"
-            android:layout_marginTop="20dp"
             android:fontFamily="casual"
             android:text="confirm"
             android:textColor="@android:color/black"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="casual"
+            android:text="CLEAR"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_alignBaseline="@+id/confirm_button"
+            android:layout_alignBottom="@+id/confirm_button"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 
