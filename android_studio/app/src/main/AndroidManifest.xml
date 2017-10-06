@@ -19,7 +19,7 @@
         <activity
             android:name=".SettingActivity"
             android:label="Setting"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
