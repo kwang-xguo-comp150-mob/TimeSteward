@@ -3,4 +3,5 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_set_apps">SetAppsActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="app_icon">app icon</string>
 </resources>

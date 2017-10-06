@@ -1,10 +1,13 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,25 +32,22 @@ public class SettingActivity extends Activity {
         packageManager = getPackageManager();
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
         List<ApplicationInfo> installedApps = new ArrayList<ApplicationInfo>();
-        List<String> appsNames = new ArrayList<String>();
         for(ApplicationInfo app : apps) {
             // check if the app is a system app
             if((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 && (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
                 installedApps.add(app);
-                appsNames.add((String)packageManager.getApplicationLabel(app));
                 Log.d("Setting, app-list", (String)packageManager.getApplicationLabel(app));
             }
         }
 
-        // the 2nd parameter is a template view xml
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.setting_applist_item, appsNames);
-        ListView listView = (ListView)findViewById(R.id.applist);
+        // create an instance of my customized adapter
+        AppListAdapter appListAdapter = new AppListAdapter(this, installedApps, packageManager);
+        ListView listView = findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)listView.getLayoutParams();
-        System.out.print(appsNames.size());
-        lp.height = 100 * appsNames.size();
+        lp.height = 100 * installedApps.size();
         listView.setLayoutParams(lp);
-        listView.setAdapter(adapter);
+        listView.setAdapter(appListAdapter);
 
         /***********************************
         *          Set Time Limit          *
@@ -67,3 +67,13 @@ public class SettingActivity extends Activity {
         np.setWrapSelectorWheel(true);
     }
 }
+
+//private class appListAdapter extends ArrayAdapter<ApplicationInfo> {
+//    public appListAdapter(Context context, ArrayList<ApplicationInfo> appInfoList) {
+//        super(context, 0, appInfoList);
+//    }
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//
+//    }
+//}
