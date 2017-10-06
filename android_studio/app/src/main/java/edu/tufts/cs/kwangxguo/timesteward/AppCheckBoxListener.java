@@ -24,7 +24,7 @@ class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
             Log.d("cBox", "onCheckedChanged: app: " + cBox.getTag());
         }
         else {
-            selectedAppSet.remove((ApplicationInfo) cBox.getTag());
+            selectedAppSet.remove(cBox.getTag());
             Log.d("cBox", "onCheckedChanged: removeapp: " + cBox.getTag());
         }
     }
