@@ -15,7 +15,9 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SettingActivity extends Activity {
     PackageManager packageManager;
@@ -40,8 +42,10 @@ public class SettingActivity extends Activity {
             }
         }
 
+        // create a hashset to store selected appinfo
+        Set<ApplicationInfo> selectedAppSet = new HashSet<>();
         // create an instance of my customized adapter
-        AppListAdapter appListAdapter = new AppListAdapter(this, installedApps, packageManager);
+        AppListAdapter appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppSet);
         ListView listView = findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)listView.getLayoutParams();

@@ -1,5 +1,6 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Guo on 10/5/17.
@@ -22,9 +24,11 @@ import java.util.List;
 
 class AppListAdapter extends ArrayAdapter {
     private PackageManager pm;
-    public AppListAdapter(Context context, List<ApplicationInfo> appInfoList, PackageManager pm) {
+    private Set<ApplicationInfo> selectedAppSet;
+    public AppListAdapter(Context context, List<ApplicationInfo> appInfoList, PackageManager pm, Set<ApplicationInfo> set) {
         super(context, 0, appInfoList);
         this.pm = pm;
+        this.selectedAppSet = set;
     }
 
     @Override
@@ -46,12 +50,7 @@ class AppListAdapter extends ArrayAdapter {
         // deal with check box
         CheckBox cBox = convertView.findViewById(R.id.app_checkbox);
         cBox.setTag(app);
-        cBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton cBox, boolean isChecked) {
-                if (isChecked) Log.d("cBox", "onCheckedChanged: checked: " + cBox.getTag());
-            }
-        });
+        cBox.setOnCheckedChangeListener(new AppCheckBoxListener(selectedAppSet));
         return convertView;
     }
 
