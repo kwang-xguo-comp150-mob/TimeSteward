@@ -40,12 +40,6 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         this.settingActivity = SettingActivity.this;
 
-        /*******************************************************
-         *             Setup top tool bar
-         *******************************************************/
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.setting_toolbar);
-        setSupportActionBar(myToolbar);
-
 
         /*******************************************************
          *             Create App List:

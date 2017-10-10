@@ -6,103 +6,100 @@
     android:layout_height="match_parent"
     tools:context="edu.tufts.cs.kwangxguo.timesteward.SettingActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/setting_toolbar"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:layout_height="match_parent"
+        tools:context="edu.tufts.cs.kwangxguo.timesteward.MainActivity">
+        <RelativeLayout
+            android:layout_width="395dp"
+            android:layout_height="643dp"
+            tools:layout_editor_absoluteY="8dp"
+            tools:layout_editor_absoluteX="8dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="casual"
-            android:text="Select Apps"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/text1"
-            android:id="@+id/scrollView2">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:weightSum="1">
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="casual"
+                android:text="Select Apps"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/text1"
+                android:id="@+id/scrollView2">
 
-                <ListView
-                    android:id="@+id/applist"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="800dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/text1"
-                    android:layout_marginTop="10dp" />
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="1">
 
-        <TextView
-            android:id="@+id/set_time_limit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:fontFamily="casual"
-            android:text="Set Time Limit"
-            android:textColor="@android:color/black"
-            android:textSize="24dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/scrollView2"
-            android:layout_alignStart="@+id/text1" />
 
-        <NumberPicker
-            android:id="@+id/np"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/set_time_limit" />
+                    <ListView
+                        android:id="@+id/applist"
+                        android:layout_width="match_parent"
+                        android:layout_height="800dp"
+                        android:layout_marginTop="10dp" />
+                </LinearLayout>
+            </ScrollView>
 
-        <Button
-            android:id="@+id/confirm_button"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="casual"
-            android:text="confirm"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" />
+            <TextView
+                android:id="@+id/set_time_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="casual"
+                android:text="Set Time Limit"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_below="@+id/scrollView2"
+                android:layout_alignStart="@+id/text1" />
 
-        <Button
-            android:id="@+id/clear_button"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="casual"
-            android:text="CLEAR"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_alignBaseline="@+id/confirm_button"
-            android:layout_alignBottom="@+id/confirm_button"
-            android:layout_alignParentStart="true" />
+            <NumberPicker
+                android:id="@+id/np"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/set_time_limit" />
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/confirm_button"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="casual"
+                android:text="confirm"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
 
+            <Button
+                android:id="@+id/clear_button"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="casual"
+                android:text="CLEAR"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_alignBaseline="@+id/confirm_button"
+                android:layout_alignBottom="@+id/confirm_button"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>
