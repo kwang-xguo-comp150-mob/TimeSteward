@@ -70,19 +70,16 @@ public class SettingActivity extends AppCompatActivity {
         /***********************************
          *          Set Time Limit          *
          ************************************/
-        final TextView tv = (TextView)findViewById(R.id.set_time_limit);
-        NumberPicker np = (NumberPicker)findViewById(R.id.np);
-        //Set TextView text color
-        //tv.setTextColor(Color.parseColor("#ffd32b3b"));
+        NumberPicker np_minute = (NumberPicker)findViewById(R.id.timer_minute);
 
-        //Populate NumberPicker values from minimum and maximum value range
-        //Set the minimum value of NumberPicker
-        np.setMinValue(0);
-        //Specify the maximum value/number of NumberPicker
-        np.setMaxValue(1440);
+        np_minute.setMinValue(0);
+        np_minute.setMaxValue(59);
+        np_minute.setWrapSelectorWheel(true);
 
-        //Gets whether the selector wheel wraps when reaching the min/max value.
-        np.setWrapSelectorWheel(true);
+        NumberPicker np_hour = (NumberPicker)findViewById(R.id.timer_hour);
+        np_hour.setMinValue(0);
+        np_hour.setMaxValue(23);
+        np_hour.setWrapSelectorWheel(true);
 
         /************************************
          *          Deal with Buttons       *
