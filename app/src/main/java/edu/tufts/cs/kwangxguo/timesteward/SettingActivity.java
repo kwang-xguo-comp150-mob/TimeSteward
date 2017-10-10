@@ -1,5 +1,6 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +26,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SettingActivity extends Activity {
+public class SettingActivity extends AppCompatActivity {
     private PackageManager packageManager;
     private Button confirm_button;
     private Button clear_button;
     private Set<ApplicationInfo> selectedAppSet;
     private AppListAdapter appListAdapter;
-    private CheckBox cBox;
     private Activity settingActivity;
 
     @Override
@@ -37,6 +39,13 @@ public class SettingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         this.settingActivity = SettingActivity.this;
+
+        /*******************************************************
+         *             Setup top tool bar
+         *******************************************************/
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.setting_toolbar);
+        setSupportActionBar(myToolbar);
+
 
         /*******************************************************
          *             Create App List:
@@ -57,7 +66,7 @@ public class SettingActivity extends Activity {
         selectedAppSet = new HashSet<>();
         // create an instance of my customized adapter
         appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppSet);
-        ListView listView = findViewById(R.id.applist);
+        ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
         lp.height = 100 * installedApps.size();
@@ -67,8 +76,8 @@ public class SettingActivity extends Activity {
         /***********************************
          *          Set Time Limit          *
          ************************************/
-        final TextView tv = findViewById(R.id.set_time_limit);
-        NumberPicker np = findViewById(R.id.np);
+        final TextView tv = (TextView)findViewById(R.id.set_time_limit);
+        NumberPicker np = (NumberPicker)findViewById(R.id.np);
         //Set TextView text color
         //tv.setTextColor(Color.parseColor("#ffd32b3b"));
 
@@ -85,10 +94,10 @@ public class SettingActivity extends Activity {
          *          Deal with Buttons       *
          ************************************/
         //button actions
-        confirm_button = findViewById(R.id.confirm_button);
+        confirm_button = (Button)findViewById(R.id.confirm_button);
         addListenerOn_ConfirmButton();
 
-        clear_button = findViewById(R.id.clear_button);
+        clear_button = (Button)findViewById(R.id.clear_button);
         addListenerOn_ClearButton();
     }
 
