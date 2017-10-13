@@ -24,9 +24,6 @@ import java.util.Set;
 
 public class SettingActivity extends AppCompatActivity {
     private PackageManager packageManager;
-    private Button confirm_button;
-    private Button clear_button;
-    private AppListAdapter appListAdapter;
     private Activity settingActivity;
     private Set<String> selectedAppPackageNames;
     private int timeLimit; // in minutes
@@ -56,7 +53,7 @@ public class SettingActivity extends AppCompatActivity {
         /* create a hashset to store selected app's package name */
         selectedAppPackageNames = new HashSet<>();
         // create an instance of my customized adapter
-        appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
+        AppListAdapter appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
@@ -97,7 +94,7 @@ public class SettingActivity extends AppCompatActivity {
          *          Deal with Buttons       *
          ************************************/
         //button actions
-        confirm_button = (Button)findViewById(R.id.confirm_button);
+        Button confirm_button = (Button) findViewById(R.id.confirm_button);
         confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +108,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        clear_button = (Button)findViewById(R.id.clear_button);
+        Button clear_button = (Button) findViewById(R.id.clear_button);
         clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
