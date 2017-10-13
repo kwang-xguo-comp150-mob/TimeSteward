@@ -1,27 +1,23 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,7 +48,7 @@ public class SettingActivity extends AppCompatActivity {
             // check if the app is a system app
             if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 && (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
                 installedApps.add(app);
-                Log.d("Setting, app-list", (String) packageManager.getApplicationLabel(app));
+//                Log.d("Setting, app-list", (String) packageManager.getApplicationLabel(app));
             }
         }
 
@@ -90,6 +86,8 @@ public class SettingActivity extends AppCompatActivity {
 
         clear_button = (Button)findViewById(R.id.clear_button);
         addListenerOn_ClearButton();
+
+        testUsage();
     }
 
     public void addListenerOn_ConfirmButton() {
@@ -120,6 +118,29 @@ public class SettingActivity extends AppCompatActivity {
         } else {
             activity.finish();
             activity.startActivity(activity.getIntent());
+        }
+    }
+
+    /***********************************************
+                     Test
+    ***********************************************/
+    public void testUsage() {
+        UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        long beginTime = cal.getTimeInMillis();
+        long currTime = System.currentTimeMillis();
+        List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
+        Log.d("setting", "testUsage: succeed!!, ListSize = " + uStatsList.size());
+        for (UsageStats us : uStatsList) {
+            if (us.getTotalTimeInForeground() < 1e6) continue;
+            String pkgName = us.getPackageName();
+            try {
+                String appName = packageManager.getApplicationInfo(pkgName, 0).loadLabel(packageManager).toString();
+                Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
