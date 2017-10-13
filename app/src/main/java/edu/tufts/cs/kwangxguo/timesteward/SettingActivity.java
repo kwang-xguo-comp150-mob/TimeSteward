@@ -107,7 +107,7 @@ public class SettingActivity extends AppCompatActivity {
                     Log.d("setting_confirm", "the selected apps are: " + selectedApp);
                 Log.d("setting_confirm", "time: " + timeLimit);
 
-                
+                testUsage();
             }
         });
 
