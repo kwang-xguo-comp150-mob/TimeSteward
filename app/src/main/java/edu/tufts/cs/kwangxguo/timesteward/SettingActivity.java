@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -104,7 +105,13 @@ public class SettingActivity extends AppCompatActivity {
                     Log.d("setting_confirm", "the selected apps are: " + selectedApp);
                 Log.d("setting_confirm", "time: " + timeLimit);
 
-                
+                /***********************************************
+                 *  deal with bundle and activity switching
+                 ***********************************************/
+                Intent testIntent = new Intent(getApplicationContext(), text.class);
+                testIntent.putStringArrayListExtra("selectedPackageNames", new ArrayList<String>(selectedAppPackageNames));
+                testIntent.putExtra("timeLimit", timeLimit);
+                startActivity(testIntent);
             }
         });
 
