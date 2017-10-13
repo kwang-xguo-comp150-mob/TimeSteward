@@ -26,9 +26,10 @@ public class SettingActivity extends AppCompatActivity {
     private PackageManager packageManager;
     private Button confirm_button;
     private Button clear_button;
-    private Set<ApplicationInfo> selectedAppSet;
     private AppListAdapter appListAdapter;
     private Activity settingActivity;
+    private Set<String> selectedAppPackageNames;
+    private int timeLimit; // in minutes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class SettingActivity extends AppCompatActivity {
          *******************************************************/
         packageManager = getPackageManager();
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
-        List<ApplicationInfo> installedApps = new ArrayList<ApplicationInfo>();
+        List<ApplicationInfo> installedApps = new ArrayList<>();
         for (ApplicationInfo app : apps) {
             // check if the app is a system app
             if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 && (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
@@ -52,10 +53,10 @@ public class SettingActivity extends AppCompatActivity {
             }
         }
 
-        // create a hashset to store selected appinfo
-        selectedAppSet = new HashSet<>();
+        /* create a hashset to store selected app's package name */
+        selectedAppPackageNames = new HashSet<>();
         // create an instance of my customized adapter
-        appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppSet);
+        appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
@@ -77,48 +78,54 @@ public class SettingActivity extends AppCompatActivity {
         np_hour.setMaxValue(23);
         np_hour.setWrapSelectorWheel(true);
 
+        final int[] time = {0, 0}; // hour, minute
+
+        np_hour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                time[0] = newVal;
+            }
+        });
+        np_minute.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+                time[1] = newVal;
+            }
+        });
+
         /************************************
          *          Deal with Buttons       *
          ************************************/
         //button actions
         confirm_button = (Button)findViewById(R.id.confirm_button);
-        addListenerOn_ConfirmButton();
-
-        clear_button = (Button)findViewById(R.id.clear_button);
-        addListenerOn_ClearButton();
-
-        testUsage();
-    }
-
-    public void addListenerOn_ConfirmButton() {
         confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (ApplicationInfo selectedApp : selectedAppSet)
-                    Log.d("the selected apps are: ", (String) packageManager.getApplicationLabel(selectedApp));
-                /* should jump to another view */
+                // set selected time in minutes
+                timeLimit = (time[0] * 60) + time[1];
+                for (String selectedApp : selectedAppPackageNames)
+                    Log.d("setting_confirm", "the selected apps are: " + selectedApp);
+                Log.d("setting_confirm", "time: " + timeLimit);
+
+                
             }
         });
-    }
 
-    public void addListenerOn_ClearButton() {
+        clear_button = (Button)findViewById(R.id.clear_button);
         clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            // for (String name : selectedAppPackageNames) Log.d("setting_clear", "onClick: " + name);
                 // clear selectedAppSet and refresh the activity
-                selectedAppSet.clear();
+                selectedAppPackageNames.clear();
                 restartActivity(settingActivity);
             }
         });
+
     }
 
     public static void restartActivity(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 11) {
             activity.recreate();
-        } else {
-            activity.finish();
-            activity.startActivity(activity.getIntent());
-        }
     }
 
     /***********************************************
