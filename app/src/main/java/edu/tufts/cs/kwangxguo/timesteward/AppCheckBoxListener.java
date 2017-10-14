@@ -1,8 +1,8 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import java.util.Set;
@@ -12,20 +12,20 @@ import java.util.Set;
  */
 
 class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
-    private Set<ApplicationInfo> selectedAppSet;
-    public AppCheckBoxListener(Set<ApplicationInfo> selectedAppSet) {
-        this.selectedAppSet = selectedAppSet;
+    private Set<String> selectedAppPackageNames;
+    public AppCheckBoxListener(Set<String> selectedAppSet) {
+        this.selectedAppPackageNames = selectedAppSet;
     }
 
     @Override
     public void onCheckedChanged(CompoundButton cBox, boolean checked) {
         if (checked) {
-            selectedAppSet.add((ApplicationInfo) cBox.getTag());
-            Log.d("cBox", "onCheckedChanged: app: " + cBox.getTag());
+            selectedAppPackageNames.add(((ApplicationInfo)cBox.getTag()).packageName);
+            Log.d("setting_cBox", "onCheckedChanged: app: " + cBox.getTag());
         }
         else {
-            selectedAppSet.remove(cBox.getTag());
-            Log.d("cBox", "onCheckedChanged: removeapp: " + cBox.getTag());
+            selectedAppPackageNames.remove(((ApplicationInfo)cBox.getTag()).packageName);
+            Log.d("setting_cBox", "onCheckedChanged: removeapp: " + cBox.getTag());
         }
     }
 
