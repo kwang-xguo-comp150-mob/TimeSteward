@@ -3,10 +3,12 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.app.Activity;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,6 +115,21 @@ public class SettingActivity extends AppCompatActivity {
                 Intent testIntent = new Intent(getApplicationContext(), text.class);
                 testIntent.putStringArrayListExtra("selectedPackageNames", new ArrayList<String>(selectedAppPackageNames));
                 testIntent.putExtra("timeLimit", timeLimit);
+
+                // test Gson
+                Gson gson = new Gson();
+                String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));
+                Log.d("setting_confirm", "onClick: Json: " + gsonString);
+
+                // store data in sqlite
+                SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
+                db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
+                db.execSQL("DELETE FROM Setting");
+                ContentValues value = new ContentValues();
+                value.put("app_package_name_list", gsonString);
+                value.put("time_limit", timeLimit);
+                db.insert("Setting", null, value);
+                db.close();
                 startActivity(testIntent);
             }
         });
