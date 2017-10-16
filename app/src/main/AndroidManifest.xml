@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.tufts.cs.kwangxguo.timesteward">
 
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
     <application
@@ -24,6 +25,7 @@
             android:name=".SettingActivity"
             android:label="Setting"
             android:theme="@style/AppTheme" />
+        <activity android:name=".report"></activity>
     </application>
 
 </manifest>

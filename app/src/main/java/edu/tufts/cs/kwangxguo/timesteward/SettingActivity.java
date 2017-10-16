@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +30,12 @@ public class SettingActivity extends AppCompatActivity {
     private Button clear_button;
     private AppListAdapter appListAdapter;
     private Activity settingActivity;
-    private Set<String> selectedAppPackageNames;
+    private ArrayList<ApplicationInfo> installedApps;
+    private ArrayList<String> selectedAppPackageNames;
     private int timeLimit; // in minutes
+//    private int timeRemain = 10;
+//    private int usagetime = 0;
+    private final int[] time = {0,0}; // hour, minute
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class SettingActivity extends AppCompatActivity {
          *******************************************************/
         packageManager = getPackageManager();
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
-        List<ApplicationInfo> installedApps = new ArrayList<>();
+        installedApps = new ArrayList<>();
         for (ApplicationInfo app : apps) {
             // check if the app is a system app
             if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 && (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
@@ -53,8 +59,8 @@ public class SettingActivity extends AppCompatActivity {
             }
         }
 
-        /* create a hashset to store selected app's package name */
-        selectedAppPackageNames = new HashSet<>();
+        /* create a list to store selected app's package name */
+        selectedAppPackageNames = new ArrayList<>();
         // create an instance of my customized adapter
         appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
         ListView listView = (ListView)findViewById(R.id.applist);
@@ -78,8 +84,6 @@ public class SettingActivity extends AppCompatActivity {
         np_hour.setMaxValue(23);
         np_hour.setWrapSelectorWheel(true);
 
-        final int[] time = {0, 0}; // hour, minute
-
         np_hour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
@@ -102,12 +106,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // set selected time in minutes
-                timeLimit = (time[0] * 60) + time[1];
-                for (String selectedApp : selectedAppPackageNames)
-                    Log.d("setting_confirm", "the selected apps are: " + selectedApp);
-                Log.d("setting_confirm", "time: " + timeLimit);
 
-                testUsage();
             }
         });
 
@@ -117,13 +116,35 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View view) {
             // for (String name : selectedAppPackageNames) Log.d("setting_clear", "onClick: " + name);
                 // clear selectedAppSet and refresh the activity
+                Log.d("clear button:","clear!");
                 selectedAppPackageNames.clear();
                 restartActivity(settingActivity);
             }
         });
+        addListenerOnButton();
 
     }
+    public void addListenerOnButton() {
+        final Context context = this;
+        confirm_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timeLimit = (time[0] * 60) + time[1];
+                for (String selectedApp : selectedAppPackageNames)
+                    Log.d("setting_confirm", "the selected apps are: " + selectedApp);
+                Log.d("setting_confirm", "time: " + timeLimit);
 
+                //getUsage();
+                Intent intent = new Intent(context, report.class);
+
+                intent.putExtra("timeLimit", timeLimit);
+                //intent.putExtra("timeRemain", timeRemain);
+                intent.putExtra("selectedAppList", selectedAppPackageNames);
+                intent.putExtra("installedApps", installedApps);
+                startActivity(intent);
+            }
+        });
+    }
     public static void restartActivity(Activity activity) {
             activity.recreate();
     }
@@ -131,23 +152,25 @@ public class SettingActivity extends AppCompatActivity {
     /***********************************************
                      Test
     ***********************************************/
-    public void testUsage() {
-        UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        long beginTime = cal.getTimeInMillis();
-        long currTime = System.currentTimeMillis();
-        List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
-        Log.d("setting", "testUsage: succeed!!, ListSize = " + uStatsList.size());
-        for (UsageStats us : uStatsList) {
-            if (us.getTotalTimeInForeground() < 1e6) continue;
-            String pkgName = us.getPackageName();
-            try {
-                String appName = packageManager.getApplicationInfo(pkgName, 0).loadLabel(packageManager).toString();
-                Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public void getUsage() {
+//        UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DATE, -1);
+//        long beginTime = cal.getTimeInMillis();
+//        long currTime = System.currentTimeMillis();
+//        List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
+//        Log.d("setting", "testUsage: succeed!!, ListSize = " + uStatsList.size());
+//        for (UsageStats us : uStatsList) {
+//            if (us.getTotalTimeInForeground() < 1e6) continue;
+//            String pkgName = us.getPackageName();
+//            try {
+//                String appName = packageManager.getApplicationInfo(pkgName, 0).loadLabel(packageManager).toString();
+//                Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+//                usagetime += us.getTotalTimeInForeground() / 6e4;
+//            } catch (PackageManager.NameNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        timeRemain = timeLimit - usagetime;
+//    }
 }
