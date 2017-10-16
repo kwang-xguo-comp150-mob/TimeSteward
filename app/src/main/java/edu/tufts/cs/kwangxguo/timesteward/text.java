@@ -1,20 +1,19 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -63,5 +62,14 @@ public class text extends AppCompatActivity {
         t3.setText("1 " + String.valueOf(time));
 //        t4.setText("2 " + lst.size() + "");
         t4.setText("2 " + gsonString);
+
+        // test for TestService
+        JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, TestService.class));
+        builder.setOverrideDeadline(1000);
+
+        JobScheduler js = (JobScheduler) getSystemService(this.JOB_SCHEDULER_SERVICE);
+        int code = js.schedule(builder.build());
+        if (code <= 0) Log.d("TestService", "onCreate: _______ Job scheduling failed --------");
+        Log.d("TestService", "onCreate: -------- Job scheduled ---------");
     }
 }

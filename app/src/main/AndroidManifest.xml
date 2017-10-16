@@ -34,6 +34,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.tufts.cs.kwangxguo.timesteward.SettingActivity" />
         </activity>
+
+        <service
+            android:name=".TestService"
+            android:label="Test Service"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+
+        </service>
     </application>
+
 
 </manifest>
