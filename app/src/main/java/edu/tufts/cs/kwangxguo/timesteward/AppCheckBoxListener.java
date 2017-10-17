@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.CompoundButton;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -12,8 +13,9 @@ import java.util.Set;
  */
 
 class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
-    private Set<String> selectedAppPackageNames;
-    public AppCheckBoxListener(Set<String> selectedAppSet) {
+
+    private ArrayList<String> selectedAppPackageNames;
+    public AppCheckBoxListener(ArrayList<String> selectedAppSet) {
         this.selectedAppPackageNames = selectedAppSet;
     }
 
@@ -21,12 +23,11 @@ class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
     public void onCheckedChanged(CompoundButton cBox, boolean checked) {
         if (checked) {
             selectedAppPackageNames.add(((ApplicationInfo)cBox.getTag()).packageName);
-            Log.d("setting_cBox", "onCheckedChanged: app: " + cBox.getTag());
+            Log.d("setting_cBox", "onCheckedChanged: app: " + ((ApplicationInfo) cBox.getTag()));
         }
         else {
             selectedAppPackageNames.remove(((ApplicationInfo)cBox.getTag()).packageName);
-            Log.d("setting_cBox", "onCheckedChanged: removeapp: " + cBox.getTag());
+            Log.d("setting_cBox", "onCheckedChanged: removeapp: " + ((ApplicationInfo) cBox.getTag()));
         }
     }
-
 }

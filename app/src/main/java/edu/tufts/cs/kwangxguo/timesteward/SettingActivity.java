@@ -1,15 +1,12 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
 import android.app.Activity;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,47 +15,44 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import com.google.gson.Gson;
 
 public class SettingActivity extends AppCompatActivity {
     private PackageManager packageManager;
+    private Button confirm_button;
+    private Button clear_button;
+    private AppListAdapter appListAdapter;
     private Activity settingActivity;
-    private Set<String> selectedAppPackageNames;
+    private ArrayList<ApplicationInfo> installedApps;
+    private ArrayList<String> selectedAppPackageNames;
     private int timeLimit; // in minutes
+    private final int[] time = {0,0}; // hour, minute
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         this.settingActivity = SettingActivity.this;
-
-
         /*******************************************************
          *             Create App List:
          *   Using customized adapter, display icon and app name
          *******************************************************/
         packageManager = getPackageManager();
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
-        List<ApplicationInfo> installedApps = new ArrayList<>();
+        installedApps = new ArrayList<>();
         for (ApplicationInfo app : apps) {
             // check if the app is a system app
             if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 && (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
                 installedApps.add(app);
-//                Log.d("Setting, app-list", (String) packageManager.getApplicationLabel(app));
             }
         }
-
-        /* create a hashset to store selected app's package name */
-        selectedAppPackageNames = new HashSet<>();
+        /* create a list to store selected app's package name */
+        selectedAppPackageNames = new ArrayList<>();
         // create an instance of my customized adapter
-        AppListAdapter appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
+        appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
+
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
@@ -79,9 +73,6 @@ public class SettingActivity extends AppCompatActivity {
         np_hour.setMinValue(0);
         np_hour.setMaxValue(23);
         np_hour.setWrapSelectorWheel(true);
-
-        final int[] time = {0, 0}; // hour, minute
-
         np_hour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
@@ -98,33 +89,34 @@ public class SettingActivity extends AppCompatActivity {
         /************************************
          *          Deal with Buttons       *
          ************************************/
-        //button actions
-        Button confirm_button = (Button) findViewById(R.id.confirm_button);
+        confirm_button = (Button)findViewById(R.id.confirm_button);
+
+        clear_button = (Button)findViewById(R.id.clear_button);
+        clear_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedAppPackageNames.clear();
+                restartActivity(settingActivity);
+            }
+        });
+        addListenerOnButton();
+
+    }
+    public void addListenerOnButton() {
+        final Context context = this;
         confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // set selected time in minutes
                 timeLimit = (time[0] * 60) + time[1];
                 for (String selectedApp : selectedAppPackageNames)
                     Log.d("setting_confirm", "the selected apps are: " + selectedApp);
                 Log.d("setting_confirm", "time: " + timeLimit);
 
-                /***********************************************
-                 *  deal with SQLite and activity switching
-                 ***********************************************/
+                Intent intent = new Intent(context, report.class);
 
-                // convert selectedAppPackageNames to Json, store it in SQLite.
-                // The structure of table "Setting" is looks like:
-                // |-----------------------+-----------|
-                // | app_package_name_list | time_limit|
-                // |-----------------------+-----------|
-                // | "Json String"         |  Integer  |
-                // |-----------------------+-----------|
-                // The table "Setting" only has one row.
+                //use sqlite to store timelimit and selectedapplist
                 Gson gson = new Gson();
                 String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));
-                Log.d("setting_confirm", "onClick: Json: " + gsonString);
-
                 SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
                 db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
                 db.execSQL("DELETE FROM Setting");
@@ -134,48 +126,12 @@ public class SettingActivity extends AppCompatActivity {
                 db.insert("Setting", null, value);
                 db.close();
 
-                // deal with intent switching
-
-            }
-        });
-
-        Button clear_button = (Button) findViewById(R.id.clear_button);
-        clear_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            // for (String name : selectedAppPackageNames) Log.d("setting_clear", "onClick: " + name);
-                // clear selectedAppSet and refresh the activity
-                selectedAppPackageNames.clear();
-                restartActivity(settingActivity);
+                startActivity(intent);
             }
         });
 
     }
-
     public static void restartActivity(Activity activity) {
             activity.recreate();
-    }
-
-    /***********************************************
-                     Test for app.usage
-    ***********************************************/
-    public void testUsage() {
-        UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        long beginTime = cal.getTimeInMillis();
-        long currTime = System.currentTimeMillis();
-        List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
-        Log.d("setting", "testUsage: succeed!!, ListSize = " + uStatsList.size());
-        for (UsageStats us : uStatsList) {
-            if (us.getTotalTimeInForeground() < 1e6) continue;
-            String pkgName = us.getPackageName();
-            try {
-                String appName = packageManager.getApplicationInfo(pkgName, 0).loadLabel(packageManager).toString();
-                Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +15,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
 
 /**
- * Created by Guo on 10/5/17.
+ * Created by wangkeyue on 10/15/17.
  */
 
-class AppListAdapter extends ArrayAdapter {
+class AppListAdapter2 extends ArrayAdapter {
 
     private PackageManager pm;
     private ArrayList<String> selectedAppPackageNames;
-    AppListAdapter(Context context, ArrayList<ApplicationInfo> appInfoList, PackageManager pm, ArrayList<String> set) {
-
+    private HashMap<String, Integer> usageTime;
+    AppListAdapter2(Context context, ArrayList<ApplicationInfo> appInfoList, PackageManager pm, ArrayList<String> set, HashMap<String, Integer> usageTime) {
         super(context, 0, appInfoList);
         this.pm = pm;
         this.selectedAppPackageNames = set;
+        this.usageTime = usageTime;
     }
 
     @Override
@@ -37,22 +38,23 @@ class AppListAdapter extends ArrayAdapter {
         ApplicationInfo app = (ApplicationInfo) getItem(position);
         // check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.setting_applist_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.applist_usage_time, parent, false);
         }
         // look up views
-        ImageView appIcon = convertView.findViewById(R.id.app_icon);
-        TextView appName = convertView.findViewById(R.id.app_name);
+        ImageView appIcon = convertView.findViewById(R.id.app_icon2);
+        TextView appName = convertView.findViewById(R.id.app_name2);
+        TextView appTime = convertView.findViewById(R.id.app_time);
         // populate data into template view
-        String appNameString = (String)pm.getApplicationLabel(app);
+        String appNameString = app.packageName;
         Drawable appIconDrawable = app != null ? app.loadIcon(pm) : null;
+        int appUsageTime;
+        if (usageTime.containsKey(appNameString)) appUsageTime = usageTime.get(appNameString);
+        else appUsageTime = 0;
         appIcon.setImageDrawable(appIconDrawable);
         appName.setText(appNameString);
-
-        // deal with check box
-        CheckBox cBox = convertView.findViewById(R.id.app_checkbox);
-        cBox.setTag(app);
-        cBox.setOnCheckedChangeListener(new AppCheckBoxListener(selectedAppPackageNames));
+        appTime.setText(appUsageTime+" mins");
         return convertView;
     }
+
 
 }

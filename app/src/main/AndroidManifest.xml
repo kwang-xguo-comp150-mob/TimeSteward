@@ -25,6 +25,7 @@
             android:name=".SettingActivity"
             android:label="Setting"
             android:theme="@style/AppTheme" />
+        <activity android:name=".report"></activity>
     </application>
 
 </manifest>
