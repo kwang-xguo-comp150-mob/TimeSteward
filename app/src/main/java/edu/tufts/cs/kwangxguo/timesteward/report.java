@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -31,16 +37,30 @@ public class report extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        Intent in = getIntent();
-        Bundle b = in.getExtras();
-        timeLimit = b.getInt("timeLimit");
-        //int timeRemain = b.getInt("timeRemain");
+//        Intent in = getIntent();
+//        Bundle b = in.getExtras();
+//        timeLimit = b.getInt("timeLimit");
 
         // create an instance of my customized adapter
         packageManager = getPackageManager();
         //ArrayList<ApplicationInfo> installedApps = b.getParcelableArrayList("installedApps");
         selectedApps = new ArrayList<>();
-        selectedAppNames = b.getStringArrayList("selectedAppList");
+//        selectedAppNames = b.getStringArrayList("selectedAppList");
+        SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
+        cursor.moveToFirst();
+        String selectedAppNames_string = cursor.getString(0);
+        timeLimit = cursor.getInt(1);
+        cursor.close();
+        db.close();
+
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Gson gson = new Gson();
+        selectedAppNames = gson.fromJson(selectedAppNames_string, type);
+        for (int i = 0; i < selectedAppNames.size(); i++) {
+            Log.d("selectedAppName",selectedAppNames.get(i));
+        }
+
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
         for (ApplicationInfo app : apps) {
             if (selectedAppNames.contains(app.packageName)) {
@@ -70,6 +90,7 @@ public class report extends AppCompatActivity {
     }
 
     public void getUsage() {
+
         UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
         Calendar today = Calendar.getInstance();
         today.add(Calendar.DATE, -1);
@@ -84,6 +105,7 @@ public class report extends AppCompatActivity {
         for (UsageStats us : uStatsList) {
             if (us.getTotalTimeInForeground() < 1e6) continue;
             String pkgName = us.getPackageName();
+            Log.d("getPackageName()",pkgName);
             try {
                 if (selectedAppNames.contains(pkgName)) {
                     String appName = packageManager.getApplicationInfo(pkgName, 0).packageName;

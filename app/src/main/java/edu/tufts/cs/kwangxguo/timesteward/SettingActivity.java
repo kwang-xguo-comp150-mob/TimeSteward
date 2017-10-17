@@ -3,10 +3,12 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.app.Activity;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +25,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import com.google.gson.Gson;
 public class SettingActivity extends AppCompatActivity {
     private PackageManager packageManager;
     private Button confirm_button;
@@ -134,13 +136,23 @@ public class SettingActivity extends AppCompatActivity {
                     Log.d("setting_confirm", "the selected apps are: " + selectedApp);
                 Log.d("setting_confirm", "time: " + timeLimit);
 
-                //getUsage();
                 Intent intent = new Intent(context, report.class);
 
-                intent.putExtra("timeLimit", timeLimit);
-                //intent.putExtra("timeRemain", timeRemain);
-                intent.putExtra("selectedAppList", selectedAppPackageNames);
-                intent.putExtra("installedApps", installedApps);
+//                intent.putExtra("timeLimit", timeLimit);
+//                intent.putExtra("selectedAppList", selectedAppPackageNames);
+//                intent.putExtra("installedApps", installedApps);
+
+                //use sqlite to store timelimit and selectedapplist
+                Gson gson = new Gson();
+                String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));
+                SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
+                db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
+                db.execSQL("DELETE FROM Setting");
+                ContentValues value = new ContentValues();
+                value.put("app_package_name_list", gsonString);
+                value.put("time_limit", timeLimit);
+                db.insert("Setting", null, value);
+                db.close();
                 startActivity(intent);
             }
         });
