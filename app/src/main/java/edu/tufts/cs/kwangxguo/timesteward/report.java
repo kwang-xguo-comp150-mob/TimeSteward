@@ -3,7 +3,6 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -37,15 +36,11 @@ public class report extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-//        Intent in = getIntent();
-//        Bundle b = in.getExtras();
-//        timeLimit = b.getInt("timeLimit");
 
         // create an instance of my customized adapter
         packageManager = getPackageManager();
-        //ArrayList<ApplicationInfo> installedApps = b.getParcelableArrayList("installedApps");
         selectedApps = new ArrayList<>();
-//        selectedAppNames = b.getStringArrayList("selectedAppList");
+
         SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
         Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
         cursor.moveToFirst();
@@ -57,21 +52,16 @@ public class report extends AppCompatActivity {
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         Gson gson = new Gson();
         selectedAppNames = gson.fromJson(selectedAppNames_string, type);
-        for (int i = 0; i < selectedAppNames.size(); i++) {
-            Log.d("selectedAppName",selectedAppNames.get(i));
-        }
 
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
         for (ApplicationInfo app : apps) {
             if (selectedAppNames.contains(app.packageName)) {
                 selectedApps.add(app);
-                Log.d("selectedAppName", app.packageName);
             }
         }
 
         getUsage();
-        Log.d("timelimit:",timeLimit + "");
-        Log.d("timeremain:", timeRemain + "");
+
         TextView time_limit = (TextView)findViewById(R.id.time_limit);
         time_limit.setText("Total Time Limit: "+timeLimit+"mins.");
 
@@ -86,11 +76,9 @@ public class report extends AppCompatActivity {
         lp.height = 100 * selectedAppNames.size();
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
-
     }
 
     public void getUsage() {
-
         UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
         Calendar today = Calendar.getInstance();
         today.add(Calendar.DATE, -1);
@@ -101,11 +89,9 @@ public class report extends AppCompatActivity {
         long beginTime = today.getTimeInMillis();
         long currTime = System.currentTimeMillis();
         List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
-        Log.d("setting", "testUsage: succeed!!, ListSize = " + uStatsList.size());
         for (UsageStats us : uStatsList) {
             if (us.getTotalTimeInForeground() < 1e6) continue;
             String pkgName = us.getPackageName();
-            Log.d("getPackageName()",pkgName);
             try {
                 if (selectedAppNames.contains(pkgName)) {
                     String appName = packageManager.getApplicationInfo(pkgName, 0).packageName;
@@ -114,7 +100,7 @@ public class report extends AppCompatActivity {
                     usageTime.put(appName, (int)(us.getTotalTimeInForeground() / 6e4));
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
         timeRemain = timeLimit - usagetime;
