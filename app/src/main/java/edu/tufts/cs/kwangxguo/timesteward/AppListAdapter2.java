@@ -51,7 +51,7 @@ class AppListAdapter2 extends ArrayAdapter {
         if (usageTime.containsKey(appNameString)) appUsageTime = usageTime.get(appNameString);
         else appUsageTime = 0;
         appIcon.setImageDrawable(appIconDrawable);
-        appName.setText(appNameString);
+        appName.setText(pm.getApplicationLabel(app));
         appTime.setText(appUsageTime+" mins");
         return convertView;
     }
