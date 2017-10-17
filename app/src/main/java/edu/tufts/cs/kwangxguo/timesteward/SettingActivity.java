@@ -18,6 +18,7 @@ import android.widget.NumberPicker;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.Gson;
+
 public class SettingActivity extends AppCompatActivity {
     private PackageManager packageManager;
     private Button confirm_button;
@@ -51,6 +52,7 @@ public class SettingActivity extends AppCompatActivity {
         selectedAppPackageNames = new ArrayList<>();
         // create an instance of my customized adapter
         appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
+
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
@@ -71,7 +73,6 @@ public class SettingActivity extends AppCompatActivity {
         np_hour.setMinValue(0);
         np_hour.setMaxValue(23);
         np_hour.setWrapSelectorWheel(true);
-
         np_hour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
@@ -128,6 +129,7 @@ public class SettingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
     public static void restartActivity(Activity activity) {
             activity.recreate();

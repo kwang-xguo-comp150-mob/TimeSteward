@@ -26,6 +26,7 @@ class AppListAdapter extends ArrayAdapter {
     private PackageManager pm;
     private ArrayList<String> selectedAppPackageNames;
     AppListAdapter(Context context, ArrayList<ApplicationInfo> appInfoList, PackageManager pm, ArrayList<String> set) {
+
         super(context, 0, appInfoList);
         this.pm = pm;
         this.selectedAppPackageNames = set;

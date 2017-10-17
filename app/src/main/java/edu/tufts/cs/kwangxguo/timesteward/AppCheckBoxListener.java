@@ -13,6 +13,7 @@ import java.util.Set;
  */
 
 class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
+
     private ArrayList<String> selectedAppPackageNames;
     public AppCheckBoxListener(ArrayList<String> selectedAppSet) {
         this.selectedAppPackageNames = selectedAppSet;
@@ -29,5 +30,4 @@ class AppCheckBoxListener implements CompoundButton.OnCheckedChangeListener {
             Log.d("setting_cBox", "onCheckedChanged: removeapp: " + ((ApplicationInfo) cBox.getTag()));
         }
     }
-
 }
