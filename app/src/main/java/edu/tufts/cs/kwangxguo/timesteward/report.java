@@ -122,9 +122,7 @@ public class report extends AppCompatActivity {
 
     }
     public void onSettingAction(MenuItem mi){
-
-//        Intent intent = new Intent(this, SettingActivity.class);
-//        startActivity(intent);
-        // the above works --> jump to the setting page
+        Intent intent = new Intent(this, SetPage.class);
+        startActivity(intent);
     }
 }

@@ -9,7 +9,10 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -35,6 +38,9 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         this.settingActivity = SettingActivity.this;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
         /*******************************************************
          *             Create App List:
          *   Using customized adapter, display icon and app name
@@ -131,7 +137,23 @@ public class SettingActivity extends AppCompatActivity {
         });
 
     }
+
     public static void restartActivity(Activity activity) {
             activity.recreate();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.report_menu, menu);
+        return true;
+    }
+
+    public void onMenuAction(MenuItem mi){
+
+    }
+
+    public void onSettingAction(MenuItem mi){
+        Intent intent = new Intent(this, SetPage.class);
+        startActivity(intent);
     }
 }
