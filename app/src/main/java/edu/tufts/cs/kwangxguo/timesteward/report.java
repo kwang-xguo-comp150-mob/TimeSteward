@@ -3,13 +3,17 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,6 +41,8 @@ public class report extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
         // create an instance of my customized adapter
         packageManager = getPackageManager();
         selectedApps = new ArrayList<>();
@@ -104,5 +110,21 @@ public class report extends AppCompatActivity {
             }
         }
         timeRemain = timeLimit - usagetime;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.report_menu, menu);
+        return true;
+    }
+    public void onMenuAction(MenuItem mi){
+
+    }
+    public void onSettingAction(MenuItem mi){
+
+//        Intent intent = new Intent(this, SettingActivity.class);
+//        startActivity(intent);
+        // the above works --> jump to the setting page
     }
 }
