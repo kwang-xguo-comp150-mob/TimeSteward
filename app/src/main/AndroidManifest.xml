@@ -26,7 +26,8 @@
             android:label="Setting"
             android:theme="@style/AppTheme" />
         <activity android:name=".report" />
-        <activity android:name=".SetPage"></activity>
+        <activity android:name=".SetPage" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>
