@@ -6,8 +6,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,11 +37,31 @@ class AppListAdapter extends ArrayAdapter {
 
     private PackageManager pm;
     private ArrayList<String> selectedAppPackageNames;
+    private Set<String> packageNamesInDB;
     AppListAdapter(Context context, ArrayList<ApplicationInfo> appInfoList, PackageManager pm, ArrayList<String> set) {
-
         super(context, 0, appInfoList);
         this.pm = pm;
         this.selectedAppPackageNames = set;
+        packageNamesInDB = new HashSet<>();
+        SQLiteDatabase db = null;
+        String path = context.getDatabasePath("setting.db").getAbsolutePath();
+        Log.d("setting", "AppListAdapter: " + path);
+        try {
+            db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+        } catch(SQLiteException e) {
+            Log.d("setting", "AppListAdapter: db doesn't exist !!!!!!!!");
+        }
+        if (db != null) {
+            Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
+            cursor.moveToFirst();
+            String selectedAppNames_string = cursor.getString(0);
+            cursor.close();
+            db.close();
+
+            Type type = new TypeToken<ArrayList<String>>() {}.getType();
+            Gson gson = new Gson();
+            packageNamesInDB.addAll((ArrayList<String>)gson.fromJson(selectedAppNames_string, type));
+        }
     }
 
     @Override
@@ -59,7 +84,24 @@ class AppListAdapter extends ArrayAdapter {
         CheckBox cBox = convertView.findViewById(R.id.app_checkbox);
         cBox.setTag(app);
         cBox.setOnCheckedChangeListener(new AppCheckBoxListener(selectedAppPackageNames));
+
+        /*************************************************************
+         *  Restore checked states according to database
+         ************************************************************/
+        String thisPackageName = app.packageName;
+        if (packageNamesInDB.contains(thisPackageName)) {
+            cBox.setChecked(true);
+        }
+
         return convertView;
     }
 
 }
+
+
+
+
+
+
+
+
