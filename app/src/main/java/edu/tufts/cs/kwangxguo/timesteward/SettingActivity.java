@@ -96,7 +96,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         /************************************
-         *          Deal with Buttons       *
+         *         Deal with Buttons        *
          ************************************/
         confirm_button = (Button)findViewById(R.id.confirm_button);
 
@@ -104,8 +104,10 @@ public class SettingActivity extends AppCompatActivity {
         clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // clear database
+                settingActivity.deleteDatabase("setting.db");
                 selectedAppPackageNames.clear();
-                restartActivity(settingActivity);
+                settingActivity.recreate();
             }
         });
         addListenerOnButton();
@@ -145,10 +147,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public static void restartActivity(Activity activity) {
-            activity.recreate();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

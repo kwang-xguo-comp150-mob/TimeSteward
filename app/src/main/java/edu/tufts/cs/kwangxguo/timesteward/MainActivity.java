@@ -1,5 +1,6 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AppCompatActivity;
@@ -40,11 +41,26 @@ public class MainActivity extends AppCompatActivity {
             Context context = this;
             String path = context.getDatabasePath("setting.db").getAbsolutePath();
             checkDB = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
-            checkDB.close();
         }
         catch (SQLiteException e) {
             // database doesn't exist yet.
         }
-        return checkDB != null;
+        if (checkDB == null) return false;
+        if (dbIsEmpty(checkDB)) {
+            this.deleteDatabase("setting.db");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean dbIsEmpty(SQLiteDatabase db) {
+        boolean empty = true;
+        Cursor cur = db.rawQuery("SELECT COUNT(*) FROM Setting", null);
+        if (cur != null && cur.moveToFirst()) {
+            empty = (cur.getInt (0) == 0);
+        }
+        cur.close();
+        return empty;
     }
 }
