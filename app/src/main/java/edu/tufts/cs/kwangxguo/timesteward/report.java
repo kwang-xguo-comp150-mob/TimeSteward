@@ -43,7 +43,7 @@ public class report extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
-        // create an instance of my customized adapter
+
         packageManager = getPackageManager();
         selectedApps = new ArrayList<>();
 

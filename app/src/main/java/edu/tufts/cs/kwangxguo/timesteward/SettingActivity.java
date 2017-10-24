@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.Gson;
@@ -114,25 +117,31 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 timeLimit = (time[0] * 60) + time[1];
-                for (String selectedApp : selectedAppPackageNames)
-                    Log.d("setting_confirm", "the selected apps are: " + selectedApp);
-                Log.d("setting_confirm", "time: " + timeLimit);
+//                for (String selectedApp : selectedAppPackageNames)
+//                    Log.d("setting_confirm", "the selected apps are: " + selectedApp);
+//                Log.d("setting_confirm", "time: " + timeLimit);
 
-                Intent intent = new Intent(context, report.class);
+                if (selectedAppPackageNames.size() == 0) {
+                    Toast.makeText(getApplicationContext(),
+                            "Please at least select one App",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(context, report.class);
 
-                //use sqlite to store timelimit and selectedapplist
-                Gson gson = new Gson();
-                String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));
-                SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
-                db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
-                db.execSQL("DELETE FROM Setting");
-                ContentValues value = new ContentValues();
-                value.put("app_package_name_list", gsonString);
-                value.put("time_limit", timeLimit);
-                db.insert("Setting", null, value);
-                db.close();
+                    //use sqlite to store timelimit and selectedapplist
+                    Gson gson = new Gson();
+                    String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));
+                    SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
+                    db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
+                    db.execSQL("DELETE FROM Setting");
+                    ContentValues value = new ContentValues();
+                    value.put("app_package_name_list", gsonString);
+                    value.put("time_limit", timeLimit);
+                    db.insert("Setting", null, value);
+                    db.close();
 
-                startActivity(intent);
+                    startActivity(intent);
+                }
             }
         });
 
