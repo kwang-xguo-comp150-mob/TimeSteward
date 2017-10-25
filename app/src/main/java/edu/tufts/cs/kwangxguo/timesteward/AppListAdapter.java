@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -38,8 +41,10 @@ class AppListAdapter extends ArrayAdapter {
     private PackageManager pm;
     private ArrayList<String> selectedAppPackageNames;
     private Set<String> packageNamesInDB;
+    Context theContext;
     AppListAdapter(Context context, ArrayList<ApplicationInfo> appInfoList, PackageManager pm, ArrayList<String> set) {
         super(context, 0, appInfoList);
+        this.theContext = context;
         this.pm = pm;
         this.selectedAppPackageNames = set;
         packageNamesInDB = new HashSet<>();
@@ -77,7 +82,11 @@ class AppListAdapter extends ArrayAdapter {
         // populate data into template view
         String appNameString = (String)pm.getApplicationLabel(app);
         Drawable appIconDrawable = app != null ? app.loadIcon(pm) : null;
-        appIcon.setImageDrawable(appIconDrawable);
+        Bitmap bitmap = ((BitmapDrawable)appIconDrawable).getBitmap();
+        Drawable smallIcon = new BitmapDrawable(theContext.getResources(), Bitmap.createScaledBitmap(bitmap, 100, 100, true));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+        appIcon.setLayoutParams(layoutParams);
+        appIcon.setImageDrawable(smallIcon);
         appName.setText(appNameString);
 
         // deal with check box
