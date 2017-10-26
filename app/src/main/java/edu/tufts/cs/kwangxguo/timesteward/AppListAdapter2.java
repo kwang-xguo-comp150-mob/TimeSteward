@@ -3,6 +3,8 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,11 +29,13 @@ class AppListAdapter2 extends ArrayAdapter {
     private PackageManager pm;
     private ArrayList<String> selectedAppPackageNames;
     private HashMap<String, Integer> usageTime;
+    private Context theContext;
     AppListAdapter2(Context context, ArrayList<ApplicationInfo> appInfoList, PackageManager pm, ArrayList<String> set, HashMap<String, Integer> usageTime) {
         super(context, 0, appInfoList);
         this.pm = pm;
         this.selectedAppPackageNames = set;
         this.usageTime = usageTime;
+        this.theContext = context;
     }
 
     @Override
@@ -50,7 +55,11 @@ class AppListAdapter2 extends ArrayAdapter {
         int appUsageTime;
         if (usageTime.containsKey(appNameString)) appUsageTime = usageTime.get(appNameString);
         else appUsageTime = 0;
-        appIcon.setImageDrawable(appIconDrawable);
+        Bitmap bitmap = ((BitmapDrawable)appIconDrawable).getBitmap();
+        Drawable smallIcon = new BitmapDrawable(theContext.getResources(), Bitmap.createScaledBitmap(bitmap, 100, 100, true));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
+        appIcon.setLayoutParams(layoutParams);
+        appIcon.setImageDrawable(smallIcon);
         appName.setText(pm.getApplicationLabel(app));
         appTime.setText(appUsageTime+" mins");
         return convertView;

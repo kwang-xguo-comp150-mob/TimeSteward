@@ -109,7 +109,7 @@ public class report extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        timeRemain = timeLimit - usagetime;
+        timeRemain = (timeLimit - usagetime) > 0 ? timeLimit - usagetime : 0;
     }
 
     @Override

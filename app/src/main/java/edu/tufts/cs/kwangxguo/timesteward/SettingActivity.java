@@ -125,7 +125,7 @@ public class SettingActivity extends AppCompatActivity {
 
                 if (selectedAppPackageNames.size() == 0) {
                     Toast.makeText(getApplicationContext(),
-                            "Please at least select one App",
+                            "Please select at least one App",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(context, report.class);
