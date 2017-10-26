@@ -113,6 +113,13 @@ public class SettingActivity extends AppCompatActivity {
         addListenerOnButton();
 
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public void addListenerOnButton() {
         final Context context = this;
         confirm_button.setOnClickListener(new View.OnClickListener() {
