@@ -31,7 +31,7 @@ public class BackgroundMonitor extends JobService {
     private PackageManager pm;
     private int totalTime;
     private int timeRemaining;
-    private boolean flag = false;
+    private String currentRunningPackageName;
 
     @Override
     public void onCreate() {
@@ -57,10 +57,10 @@ public class BackgroundMonitor extends JobService {
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d("monitor", "onStartJob: ----------- job started ----------");
-        getUsage();
+        getUsage(); // get usage time and currently running app package name.
 
         // if time limit is up, pop up notification
-        if (timeRemaining <= 0) {
+        if (selectedPackageNames.contains(currentRunningPackageName) && timeRemaining <= 0) {
             //build notification
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this)
@@ -75,11 +75,9 @@ public class BackgroundMonitor extends JobService {
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             //to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
             notificationManager.notify(0, builder.build());
-
-            // after reminding user, set flag to true, stop repeat the monitor service.
-            flag = true;
         }
 
+        Log.d("monitor", "onCreate: current app is " + currentRunningPackageName);
         return false;
     }
 
@@ -93,7 +91,6 @@ public class BackgroundMonitor extends JobService {
     @Override
     public void onDestroy() {
         Log.d("monitor", "onDestroy: ------------ Job Destroy -----------");
-        if (flag) return;
 
         JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
 
@@ -105,7 +102,7 @@ public class BackgroundMonitor extends JobService {
             minLatency = 60 * 1000;
         }
         maxDelay = minLatency + 5000;
-        builder.setMinimumLatency(minLatency);
+        builder.setMinimumLatency(10000);
         builder.setOverrideDeadline(maxDelay);
 
         JobScheduler js = getSystemService(JobScheduler.class);
@@ -125,7 +122,14 @@ public class BackgroundMonitor extends JobService {
         long beginTime = today.getTimeInMillis();
         long currTime = System.currentTimeMillis();
         List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
+        long lastUsedAppTime = 0;
         for (UsageStats us : uStatsList) {
+            // determine current foreground app
+            if (us.getLastTimeUsed() > lastUsedAppTime) {
+                currentRunningPackageName = us.getPackageName();
+                lastUsedAppTime = us.getLastTimeUsed();
+            }
+
             if (us.getTotalTimeInForeground() < 1e6) continue;
             String pkgName = us.getPackageName();
             try {
