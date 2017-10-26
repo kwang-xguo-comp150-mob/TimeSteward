@@ -1,7 +1,11 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.app.ActivityManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -34,7 +38,7 @@ public class report extends AppCompatActivity {
     private int timeRemain;
     private int usagetime;
     private ArrayList<ApplicationInfo> selectedApps;
-    private ArrayList<String> selectedAppNames;
+    private ArrayList<String> selectedAppPackageNames;
     private HashMap<String,Integer> usageTime = new HashMap<String, Integer>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +61,11 @@ public class report extends AppCompatActivity {
 
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         Gson gson = new Gson();
-        selectedAppNames = gson.fromJson(selectedAppNames_string, type);
+        selectedAppPackageNames = gson.fromJson(selectedAppNames_string, type);
 
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
         for (ApplicationInfo app : apps) {
-            if (selectedAppNames.contains(app.packageName)) {
+            if (selectedAppPackageNames.contains(app.packageName)) {
                 selectedApps.add(app);
             }
         }
@@ -74,14 +78,38 @@ public class report extends AppCompatActivity {
         TextView time_remain = (TextView)findViewById(R.id.time_remaining);
         time_remain.setText("Remaining Time: " + timeRemain+"mins.");
 
-        appListAdapter = new AppListAdapter2(this, selectedApps, packageManager, selectedAppNames, usageTime);
+        appListAdapter = new AppListAdapter2(this, selectedApps, packageManager, selectedAppPackageNames, usageTime);
         ListView listView = (ListView)findViewById(R.id.selected_applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        if (selectedAppNames.size() > 5)
-        lp.height = 100 * selectedAppNames.size();
+        if (selectedAppPackageNames.size() > 5)
+        lp.height = 100 * selectedAppPackageNames.size();
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
+
+        /********************************************************************
+         *        Schedule Sticky Background Monitor Service
+         ********************************************************************/
+        if (! isMyServiceRunning(BackgroundMonitor.class)) {
+            // if the service is not running, schedule the service
+            JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
+            builder.setMinimumLatency((long)5e3);
+            builder.setOverrideDeadline((long)6e3);
+            JobScheduler js = (JobScheduler)getSystemService(this.JOB_SCHEDULER_SERVICE);
+            int code = js.schedule(builder.build());
+            if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
+            else Log.d("monitor", "report: -------- Job scheduled ---------");
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void getUsage() {
@@ -99,7 +127,7 @@ public class report extends AppCompatActivity {
             if (us.getTotalTimeInForeground() < 1e6) continue;
             String pkgName = us.getPackageName();
             try {
-                if (selectedAppNames.contains(pkgName)) {
+                if (selectedAppPackageNames.contains(pkgName)) {
                     String appName = packageManager.getApplicationInfo(pkgName, 0).packageName;
                     Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
                     usagetime += us.getTotalTimeInForeground() / 6e4;
@@ -110,6 +138,7 @@ public class report extends AppCompatActivity {
             }
         }
         timeRemain = (timeLimit - usagetime) > 0 ? timeLimit - usagetime : 0;
+        Log.d("report", "getUsage: total time:" + usagetime);
     }
 
     @Override

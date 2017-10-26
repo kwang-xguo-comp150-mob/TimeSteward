@@ -27,7 +27,14 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".report" />
         <activity android:name=".SetPage" />
-        <activity android:name=".About"></activity>
+        <activity android:name=".About" />
+
+        <service
+            android:name=".BackgroundMonitor"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
     </application>
 
 </manifest>
