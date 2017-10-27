@@ -90,25 +90,12 @@ public class report extends AppCompatActivity {
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
          ********************************************************************/
-        if (! isMyServiceRunning(BackgroundMonitor.class)) {
-            // if the service is not running, schedule the service
-            JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
-            builder.setMinimumLatency((long)5e3);
-            JobScheduler js = (JobScheduler)getSystemService(this.JOB_SCHEDULER_SERVICE);
-            int code = js.schedule(builder.build());
-            if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
-            else Log.d("monitor", "report: -------- Job scheduled ---------");
-        }
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
+        builder.setMinimumLatency((long)5e3);
+        JobScheduler js = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        int code = js.schedule(builder.build());
+        if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
+        else Log.d("monitor", "report: -------- Job scheduled ---------");
     }
 
     public void getUsage() {
