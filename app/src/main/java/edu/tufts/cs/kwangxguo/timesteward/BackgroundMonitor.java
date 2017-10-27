@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -32,6 +33,7 @@ public class BackgroundMonitor extends JobService {
     private int totalTime;
     private int timeRemaining;
     private String currentRunningPackageName;
+    private PowerManager powerManager;
 
     @Override
     public void onCreate() {
@@ -39,6 +41,7 @@ public class BackgroundMonitor extends JobService {
         Log.d("monitor", "onCreate: ---------- job created ----------");
         this.pm = getPackageManager();
         this.totalTime = 0;
+        this.powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
 
         // get selected package name list and time limit from db.
         SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
@@ -58,7 +61,10 @@ public class BackgroundMonitor extends JobService {
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d("monitor", "onStartJob: ----------- job started ----------");
         getUsage(); // get usage time and currently running app package name.
-
+        if (! powerManager.isInteractive()) {
+            Log.d("monitor", "onStartJob: Screen is off, mute.");
+            return false;
+        }
         // if time limit is up, pop up notification
         if (selectedPackageNames.contains(currentRunningPackageName) && timeRemaining <= 0) {
             //build notification
