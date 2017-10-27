@@ -101,20 +101,18 @@ public class BackgroundMonitor extends JobService {
         JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
 
         // if timeRemaining is 10 minutes, next check will be in 10 minutes;
-        int minLatency, maxDelay;
+        int minLatency;
         if (timeRemaining > 60) {
             minLatency = timeRemaining * 1000;
         } else {
             minLatency = 60 * 1000;
         }
-        maxDelay = minLatency + 5000;
-        builder.setMinimumLatency(10000);
-        builder.setOverrideDeadline(maxDelay);
+        builder.setMinimumLatency(10000); // should be minLatency
 
         JobScheduler js = getSystemService(JobScheduler.class);
         int code = js.schedule(builder.build());
         if (code <= 0) Log.d("monitor", "onCreate: _______ Job scheduling failed --------");
-        Log.d("monitor", "onCreate: -------- Job scheduled ---------" + minLatency);
+        Log.d("monitor", "onCreate: -------- Job scheduled after " + minLatency / 1000 + " seconds ---------");
     }
 
     public void getUsage() {
@@ -131,7 +129,7 @@ public class BackgroundMonitor extends JobService {
         long lastUsedAppTime = 0;
         for (UsageStats us : uStatsList) {
             // determine current foreground app
-            if (us.getLastTimeUsed() > lastUsedAppTime) {
+            if (! us.getPackageName().equals(this.getPackageName()) && us.getLastTimeUsed() > lastUsedAppTime) {
                 currentRunningPackageName = us.getPackageName();
                 lastUsedAppTime = us.getLastTimeUsed();
             }

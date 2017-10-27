@@ -94,7 +94,6 @@ public class report extends AppCompatActivity {
             // if the service is not running, schedule the service
             JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
             builder.setMinimumLatency((long)5e3);
-            builder.setOverrideDeadline((long)6e3);
             JobScheduler js = (JobScheduler)getSystemService(this.JOB_SCHEDULER_SERVICE);
             int code = js.schedule(builder.build());
             if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
