@@ -53,7 +53,10 @@ public class SettingActivity extends AppCompatActivity {
         installedApps = new ArrayList<>();
         for (ApplicationInfo app : apps) {
             // check if the app is a system app
-            if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 && (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0) {
+            if ((app.flags & ApplicationInfo.FLAG_SYSTEM) == 0 &&
+                    (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0 ||
+                    app.packageName.equals("com.android.chrome") ||
+                    app.packageName.equals("com.google.android.youtube")) {
                 installedApps.add(app);
             }
         }

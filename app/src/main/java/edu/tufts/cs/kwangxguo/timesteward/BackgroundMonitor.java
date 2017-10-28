@@ -103,12 +103,12 @@ public class BackgroundMonitor extends JobService {
 
         // if timeRemaining is 10 minutes, next check will be in 10 minutes;
         int minLatency;
-        if (timeRemaining > 60) {
+        if (timeRemaining > 3 * 60) {
             minLatency = timeRemaining * 1000;
         } else {
-            minLatency = 60 * 1000;
+            minLatency = 3 * 60 * 1000;
         }
-        builder.setMinimumLatency(10000); // should be minLatency
+        builder.setMinimumLatency(minLatency); // should be minLatency
 
         JobScheduler js = getSystemService(JobScheduler.class);
         int code = js.schedule(builder.build());
