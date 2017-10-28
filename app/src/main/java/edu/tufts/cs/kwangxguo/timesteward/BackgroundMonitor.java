@@ -139,8 +139,9 @@ public class BackgroundMonitor extends JobService {
             try {
                 if (selectedPackageNames.contains(pkgName)) {
                     String appName = pm.getApplicationInfo(pkgName, 0).packageName;
-                    Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+                    Log.d("monitor", "testUsage: " + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
                     totalTime += us.getTotalTimeInForeground() / 6e4;
+                    Log.d("monitor", "getUsage: Total time: " + totalTime + " minutes. ");
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();

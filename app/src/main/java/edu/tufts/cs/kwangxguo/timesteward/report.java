@@ -69,7 +69,13 @@ public class report extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        usagetime = 0;
+        timeRemain = 0;
         getUsage();
 
         TextView time_limit = (TextView)findViewById(R.id.time_limit);
@@ -83,7 +89,7 @@ public class report extends AppCompatActivity {
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
         if (selectedAppPackageNames.size() > 5)
-        lp.height = 100 * selectedAppPackageNames.size();
+            lp.height = 100 * selectedAppPackageNames.size();
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
 
@@ -96,6 +102,7 @@ public class report extends AppCompatActivity {
         int code = js.schedule(builder.build());
         if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
         else Log.d("monitor", "report: -------- Job scheduled ---------");
+        Log.d("report", "onStart: onstart called !!!!!!!!!!!!!!!!!!");
     }
 
     public void getUsage() {
@@ -109,15 +116,24 @@ public class report extends AppCompatActivity {
         long beginTime = today.getTimeInMillis();
         long currTime = System.currentTimeMillis();
         List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
+        usageTime = new HashMap<>();
         for (UsageStats us : uStatsList) {
             if (us.getTotalTimeInForeground() < 1e6) continue;
+            Log.d("setting", "testUsage: " + us.getPackageName() + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+
             String pkgName = us.getPackageName();
             try {
                 if (selectedAppPackageNames.contains(pkgName)) {
                     String appName = packageManager.getApplicationInfo(pkgName, 0).packageName;
-                    Log.d("setting", "testUsage: AppName:" + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+                    Log.d("setting", "testUsage: " + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+                    Log.d("setting", "getUsage: in " + (currTime - beginTime) / 1000 / 3600.0 + " hours");
                     usagetime += us.getTotalTimeInForeground() / 6e4;
-                    usageTime.put(appName, (int)(us.getTotalTimeInForeground() / 6e4));
+                    // there might be more than one process for each package name, so need to add them all together
+                    if (! usageTime.containsKey(appName)) {
+                        usageTime.put(appName, (int)(us.getTotalTimeInForeground() / 6e4));
+                    } else {
+                        usageTime.put(appName, usageTime.get(appName) + (int)(us.getTotalTimeInForeground() / 6e4));
+                    }
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
