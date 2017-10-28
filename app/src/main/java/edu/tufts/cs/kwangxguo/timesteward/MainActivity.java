@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             this.deleteDatabase("setting.db");
             return false;
         } else {
+            checkDB.close();
             return true;
         }
     }

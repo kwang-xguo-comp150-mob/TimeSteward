@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class report extends AppCompatActivity {
     private AppListAdapter2 appListAdapter;
@@ -69,6 +70,8 @@ public class report extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
+
+        for (String name : selectedAppPackageNames) Log.d("report", "onCreate: selected: " + name);
     }
 
     @Override
@@ -115,28 +118,20 @@ public class report extends AppCompatActivity {
         today.set(Calendar.HOUR_OF_DAY, 23);
         long beginTime = today.getTimeInMillis();
         long currTime = System.currentTimeMillis();
-        List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
-        usageTime = new HashMap<>();
-        for (UsageStats us : uStatsList) {
-            if (us.getTotalTimeInForeground() < 1e6) continue;
-            Log.d("setting", "testUsage: " + us.getPackageName() + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
 
-            String pkgName = us.getPackageName();
-            try {
-                if (selectedAppPackageNames.contains(pkgName)) {
-                    String appName = packageManager.getApplicationInfo(pkgName, 0).packageName;
-                    Log.d("setting", "testUsage: " + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
-                    Log.d("setting", "getUsage: in " + (currTime - beginTime) / 1000 / 3600.0 + " hours");
-                    usagetime += us.getTotalTimeInForeground() / 6e4;
-                    // there might be more than one process for each package name, so need to add them all together
-                    if (! usageTime.containsKey(appName)) {
-                        usageTime.put(appName, (int)(us.getTotalTimeInForeground() / 6e4));
-                    } else {
-                        usageTime.put(appName, usageTime.get(appName) + (int)(us.getTotalTimeInForeground() / 6e4));
-                    }
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+        Map<String, UsageStats> uStatsMap = usm.queryAndAggregateUsageStats(beginTime, currTime);
+
+        usageTime = new HashMap<>();
+        for (Map.Entry<String, UsageStats> entry : uStatsMap.entrySet()) {
+            String packageName = entry.getKey();
+            UsageStats us = entry.getValue();
+            Log.d("report", "getUsage: " + packageName + "  " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+            if (us.getTotalTimeInForeground() < 1e4) continue;
+            if (selectedAppPackageNames.contains(packageName)) {
+                Log.d("setting", "getUsage: " + packageName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+                Log.d("setting", "getUsage: in " + (currTime - beginTime) / 1000 / 3600.0 + " hours");
+                usagetime += us.getTotalTimeInForeground() / 6e4;
+                usageTime.put(packageName, (int)(us.getTotalTimeInForeground() / 6e4));
             }
         }
         timeRemain = (timeLimit - usagetime) > 0 ? timeLimit - usagetime : 0;

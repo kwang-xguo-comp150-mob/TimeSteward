@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class BackgroundMonitor extends JobService {
     private List<String> selectedPackageNames;
@@ -125,26 +126,22 @@ public class BackgroundMonitor extends JobService {
         today.set(Calendar.HOUR_OF_DAY, 23);
         long beginTime = today.getTimeInMillis();
         long currTime = System.currentTimeMillis();
-        List<UsageStats> uStatsList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, currTime);
+        Map<String, UsageStats> uStatsMap = usm.queryAndAggregateUsageStats(beginTime, currTime);
         long lastUsedAppTime = 0;
-        for (UsageStats us : uStatsList) {
+        for (Map.Entry<String, UsageStats> entry : uStatsMap.entrySet()) {
+            String packageName = entry.getKey();
+            UsageStats us = entry.getValue();
             // determine current foreground app
             if (! us.getPackageName().equals(this.getPackageName()) && us.getLastTimeUsed() > lastUsedAppTime) {
                 currentRunningPackageName = us.getPackageName();
                 lastUsedAppTime = us.getLastTimeUsed();
             }
 
-            if (us.getTotalTimeInForeground() < 1e6) continue;
-            String pkgName = us.getPackageName();
-            try {
-                if (selectedPackageNames.contains(pkgName)) {
-                    String appName = pm.getApplicationInfo(pkgName, 0).packageName;
-                    Log.d("monitor", "testUsage: " + appName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
-                    totalTime += us.getTotalTimeInForeground() / 6e4;
-                    Log.d("monitor", "getUsage: Total time: " + totalTime + " minutes. ");
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+            if (us.getTotalTimeInForeground() < 1e4) continue;
+            if (selectedPackageNames.contains(packageName)) {
+                Log.d("monitor", "testUsage: " + packageName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
+                totalTime += us.getTotalTimeInForeground() / 6e4;
+                Log.d("monitor", "getUsage: Total time: " + totalTime + " minutes. ");
             }
         }
         timeRemaining = (timeLimit - totalTime);
