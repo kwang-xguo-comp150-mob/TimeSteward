@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         button = (Button)findViewById(R.id.button2);
         addListenerOnButton();
     }
+
     public void addListenerOnButton() {
         final Context context = this;
         button.setOnClickListener(new View.OnClickListener() {
@@ -56,11 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean dbIsEmpty(SQLiteDatabase db) {
         boolean empty = true;
-        Cursor cur = db.rawQuery("SELECT COUNT(*) FROM Setting", null);
+        Cursor cur = null;
+        try {
+            cur = db.rawQuery("SELECT COUNT(*) FROM Setting", null);
+        } catch (SQLiteException e) {
+            // Setting table doesn't exist
+        }
         if (cur != null && cur.moveToFirst()) {
             empty = (cur.getInt (0) == 0);
         }
-        cur.close();
+        if (cur != null) cur.close();
+        Log.d("main", "dbIsEmpty: db is not empty");
         return empty;
     }
 }
