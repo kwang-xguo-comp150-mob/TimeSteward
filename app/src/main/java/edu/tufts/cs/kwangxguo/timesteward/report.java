@@ -111,11 +111,11 @@ public class report extends AppCompatActivity {
     public void getUsage() {
         UsageStatsManager usm = (UsageStatsManager) this.getSystemService(Context.USAGE_STATS_SERVICE);
         Calendar today = Calendar.getInstance();
-        today.add(Calendar.DATE, -1);
-        today.set(Calendar.MILLISECOND, 999);
-        today.set(Calendar.SECOND, 59);
-        today.set(Calendar.MINUTE, 59);
-        today.set(Calendar.HOUR_OF_DAY, 23);
+        today.add(Calendar.DATE, 0);
+        today.set(Calendar.MILLISECOND, 0);
+        today.set(Calendar.SECOND, 1);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.HOUR_OF_DAY, 0);
         long beginTime = today.getTimeInMillis();
         long currTime = System.currentTimeMillis();
 
