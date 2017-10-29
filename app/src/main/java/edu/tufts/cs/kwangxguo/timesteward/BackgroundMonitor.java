@@ -101,10 +101,10 @@ public class BackgroundMonitor extends JobService {
 
         JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
 
-        // if timeRemaining is 10 minutes, next check will be in 10 minutes;
+        // if timeRemaining is larger than 3 minutes, next check will be in 'timeRemaining' minutes;
         int minLatency;
-        if (timeRemaining > 3 * 60) {
-            minLatency = timeRemaining * 1000;
+        if (timeRemaining > 3) {
+            minLatency = timeRemaining * 60 * 1000;
         } else {
             minLatency = 3 * 60 * 1000;
         }
@@ -113,7 +113,7 @@ public class BackgroundMonitor extends JobService {
         JobScheduler js = getSystemService(JobScheduler.class);
         int code = js.schedule(builder.build());
         if (code <= 0) Log.d("monitor", "onCreate: _______ Job scheduling failed --------");
-        Log.d("monitor", "onCreate: -------- Job scheduled after " + minLatency / 1000 + " seconds ---------");
+        Log.d("monitor", "onCreate: -------- Job scheduled after " + minLatency / 1000 / 60 + " minutes ---------");
     }
 
     public void getUsage() {
@@ -145,5 +145,6 @@ public class BackgroundMonitor extends JobService {
             }
         }
         timeRemaining = (timeLimit - totalTime);
+        Log.d("monitor", "getUsage: tiem remaining = " + timeRemaining + " minutes.");
     }
 }

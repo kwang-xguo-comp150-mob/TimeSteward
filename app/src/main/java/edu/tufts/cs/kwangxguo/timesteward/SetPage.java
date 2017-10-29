@@ -38,6 +38,13 @@ public class SetPage extends AppCompatActivity {
 
         addListenerOnButton();
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Report.class);
+        startActivity(intent);
+    }
+
     public void addListenerOnButton() {
         final Context context = this;
         button1.setOnClickListener(new View.OnClickListener() {

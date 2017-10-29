@@ -8,10 +8,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -138,7 +136,7 @@ public class SettingActivity extends AppCompatActivity {
                             "Please select at least one App",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(context, report.class);
+                    Intent intent = new Intent(context, Report.class);
 
                     //use sqlite to store timelimit and selectedapplist
                     Gson gson = new Gson();

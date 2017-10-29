@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class report extends AppCompatActivity {
+public class Report extends AppCompatActivity {
     private AppListAdapter2 appListAdapter;
     private PackageManager packageManager;
     private int timeLimit;

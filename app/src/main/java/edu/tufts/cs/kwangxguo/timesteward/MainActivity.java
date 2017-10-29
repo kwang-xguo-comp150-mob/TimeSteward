@@ -21,13 +21,18 @@ public class MainActivity extends AppCompatActivity {
         addListenerOnButton();
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
     public void addListenerOnButton() {
         final Context context = this;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             if(dbexist()) {
-                Intent intent = new Intent(context, report.class);
+                Intent intent = new Intent(context, Report.class);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(context, SettingActivity.class);
