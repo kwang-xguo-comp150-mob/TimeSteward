@@ -80,4 +80,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("main", "dbIsEmpty: db is not empty");
         return empty;
     }
+
+    public void forceCrash(View view) {
+        throw new RuntimeException("This is a crash");
+    }
 }
