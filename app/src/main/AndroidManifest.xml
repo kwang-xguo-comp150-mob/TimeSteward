@@ -35,6 +35,10 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE">
         </service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0dac5bbe63ab62afb41adfd30d7c43905a4fa0d6" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
