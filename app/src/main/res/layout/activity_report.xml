@@ -101,14 +101,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="600dp"
             android:orientation="vertical"
             android:weightSum="1">
 
             <ListView
                 android:id="@+id/selected_applist"
                 android:layout_width="match_parent"
-                android:layout_height="294dp"
+                android:layout_height="300dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp" />
         </LinearLayout>
