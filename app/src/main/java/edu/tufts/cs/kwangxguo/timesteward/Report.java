@@ -91,7 +91,7 @@ public class Report extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.selected_applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        lp.height = 100 * (selectedAppPackageNames.size()*2);
+        lp.height = 110 * selectedAppPackageNames.size() + 100;
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
         Log.d("lp.size",lp.height+"");
