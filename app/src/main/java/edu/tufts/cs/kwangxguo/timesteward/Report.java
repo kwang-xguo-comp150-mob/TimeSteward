@@ -12,16 +12,29 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -81,21 +94,69 @@ public class Report extends AppCompatActivity {
         timeRemain = 0;
         getUsage();
 
-        TextView time_limit = (TextView)findViewById(R.id.time_limit);
-        time_limit.setText("Total Time Limit: "+timeLimit+"mins.");
+        //piechart
+        PieChart piechart = (PieChart) findViewById(R.id.chart);
+        piechart.setUsePercentValues(true);
+        //create dataset for the piechart
+        List<PieEntry> yvalues = new ArrayList<PieEntry>();
+        yvalues.add(new PieEntry(usagetime,"Total Time Limit"));
+        yvalues.add(new PieEntry(timeRemain,"Remaining Time"));
+        PieDataSet dataSet = new PieDataSet(yvalues, "Time");
+        PieData data = new PieData(dataSet);
+        piechart.setData(data);
+        piechart.invalidate();
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        piechart.setEntryLabelColor(1);
+        piechart.setContentDescription("Usage summary");
 
-        TextView time_remain = (TextView)findViewById(R.id.time_remaining);
-        time_remain.setText("Remaining Time: " + timeRemain+"mins.");
+//        TextView time_limit = (TextView)findViewById(R.id.time_limit);
+//        time_limit.setText("Total Time Limit: "+timeLimit+"mins.");
+//
+//        TextView time_remain = (TextView)findViewById(R.id.time_remaining);
+//        time_remain.setText("Remaining Time: " + timeRemain+"mins.");
 
-        appListAdapter = new AppListAdapter2(this, selectedApps, packageManager, selectedAppPackageNames, usageTime);
-        ListView listView = (ListView)findViewById(R.id.selected_applist);
-        /* set the height of the listView */
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        lp.height = 100 * (selectedAppPackageNames.size()*2);
-        listView.setLayoutParams(lp);
-        listView.setAdapter(appListAdapter);
-        Log.d("lp.size",lp.height+"");
+//        appListAdapter = new AppListAdapter2(this, selectedApps, packageManager, selectedAppPackageNames, usageTime);
+//        ListView listView = (ListView)findViewById(R.id.selected_applist);
+//        /* set the height of the listView */
+//        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
+//        lp.height = 100 * (selectedAppPackageNames.size()*2);
+//        listView.setLayoutParams(lp);
+//        listView.setAdapter(appListAdapter);
+//        Log.d("lp.size",lp.height+"");
 
+
+        //bar chart
+        HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
+        List<BarEntry> valueSet = new ArrayList<>();
+//        ApplicationInfo app = (ApplicationInfo) getItem(position);
+//        // check if an existing view is being reused, otherwise inflate the view
+//        if (convertView == null) {
+//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.applist_usage_time, parent, false);
+//        }
+//        // look up views
+//        ImageView appIcon = convertView.findViewById(R.id.app_icon2);
+//        TextView appName = convertView.findViewById(R.id.app_name2);
+//        TextView appTime = convertView.findViewById(R.id.app_time);
+//        // populate data into template view
+//        String appNameString = app.packageName;
+//        Drawable appIconDrawable = app != null ? app.loadIcon(pm) : null;
+//        int appUsageTime;
+//        if (usageTime.containsKey(appNameString)) appUsageTime = usageTime.get(appNameString);
+//        else appUsageTime = 0;
+        for (ApplicationInfo app: selectedApps){
+            String appNameString = app.packageName;
+            int appUsageTime = 0;
+            if (usageTime.containsKey(appNameString)) appUsageTime = usageTime.get(appNameString);
+            else appUsageTime = 0;
+            BarEntry e = new BarEntry(appUsageTime,appUsageTime);
+            valueSet.add(e);
+        }
+        BarDataSet barDataSet = new BarDataSet(valueSet, "test");
+        BarData bardata = new BarData(barDataSet);
+        bardata.setBarWidth(0.9f);
+        barchart.setData(bardata);
+        barchart.setFitBars(true);
+        barchart.invalidate();
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
          ********************************************************************/
@@ -157,4 +218,5 @@ public class Report extends AppCompatActivity {
         Intent intent = new Intent(this, SetPage.class);
         startActivity(intent);
     }
+
 }
