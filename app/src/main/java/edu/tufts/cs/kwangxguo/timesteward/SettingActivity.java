@@ -66,7 +66,7 @@ public class SettingActivity extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        lp.height = 100 * installedApps.size();
+        lp.height = 100 * (installedApps.size()*2);
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
 

@@ -91,10 +91,10 @@ public class Report extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.selected_applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        if (selectedAppPackageNames.size() > 5)
-            lp.height = 100 * selectedAppPackageNames.size();
+        lp.height = 100 * (selectedAppPackageNames.size()*2);
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
+        Log.d("lp.size",lp.height+"");
 
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
