@@ -12,16 +12,33 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -81,20 +98,71 @@ public class Report extends AppCompatActivity {
         timeRemain = 0;
         getUsage();
 
-        TextView time_limit = (TextView)findViewById(R.id.time_limit);
-        time_limit.setText("Total Time Limit: "+timeLimit+"mins.");
+        //piechart
+        PieChart piechart = (PieChart) findViewById(R.id.chart);
+        //piechart.setUsePercentValues(true);
+        //create dataset for the piechart
+        List<PieEntry> yvalues = new ArrayList<PieEntry>();
+        yvalues.add(new PieEntry(usagetime,"Total Time Limit"));
+        yvalues.add(new PieEntry(timeRemain,"Remaining Time"));
+        PieDataSet dataSet = new PieDataSet(yvalues, "Time");
+        PieData data = new PieData(dataSet);
+        piechart.setData(data);
+        piechart.invalidate();
+        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        piechart.setEntryLabelColor(1);
+        piechart.setContentDescription("Usage summary");
+        piechart.getDescription().setEnabled(false);
 
-        TextView time_remain = (TextView)findViewById(R.id.time_remaining);
-        time_remain.setText("Remaining Time: " + timeRemain+"mins.");
+        //bar chart
+        HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
+        List<BarEntry> valueSet = new ArrayList<>();
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
+        lp.height = 100 * selectedApps.size();
+        if (lp.height < 300) lp.height = 300;
+        barchart.setLayoutParams(lp);
+        String[] labels = new String[selectedApps.size()];
+        for (int i = 0; i < selectedApps.size(); i++){
+                labels[i] = (String)packageManager.getApplicationLabel(selectedApps.get(i));
+                int time = 0;
+                if (usageTime.get(selectedApps.get(i).packageName) != null)
+                    time = usageTime.get(selectedApps.get(i).packageName);
+                BarEntry e = new BarEntry(i,
+                        time,labels[i]);
+                valueSet.add(e);
+        }
+        BarDataSet barDataSet = new BarDataSet(valueSet, "");
 
-        appListAdapter = new AppListAdapter2(this, selectedApps, packageManager, selectedAppPackageNames, usageTime);
-        ListView listView = (ListView)findViewById(R.id.selected_applist);
-        /* set the height of the listView */
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        lp.height = 110 * selectedAppPackageNames.size() + 100;
-        listView.setLayoutParams(lp);
-        listView.setAdapter(appListAdapter);
-        Log.d("lp.size",lp.height+"");
+        BarData bardata = new BarData(barDataSet);
+        bardata.setBarWidth(0.6f);
+        barchart.setData(bardata);
+        barchart.invalidate();
+        barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+
+        //hide some axises, labels and gridlines
+        barchart.getDescription().setEnabled(false);
+        barchart.getLegend().setEnabled(false);
+        barchart.getXAxis().setDrawGridLines(false);
+        barchart.getXAxis().setDrawAxisLine(false);
+        barchart.getXAxis().setGranularityEnabled(true);
+        barchart.getXAxis().setLabelCount(selectedApps.size());
+        barchart.getXAxis().setGranularity(1f);
+        barchart.getXAxis().setValueFormatter(new LabelFormatter(labels));
+
+        barchart.getAxisLeft().setDrawTopYLabelEntry(false);
+        barchart.getAxisLeft().setDrawTopYLabelEntry(false);
+        barchart.getAxisLeft().setDrawLimitLinesBehindData(false);
+        barchart.getAxisLeft().setDrawAxisLine(false);
+        barchart.getAxisLeft().setDrawZeroLine(false);
+        barchart.getAxisLeft().setDrawGridLines(false);
+        barchart.getAxisLeft().setDrawLabels(false);
+
+        barchart.getAxisRight().setDrawZeroLine(false);
+        barchart.getAxisRight().setDrawLimitLinesBehindData(false);
+        barchart.getAxisRight().setDrawAxisLine(false);
+        barchart.getAxisRight().setDrawGridLines(false);
+        barchart.getAxisRight().setDrawTopYLabelEntry(false);
+        barchart.getAxisRight().setDrawLabels(false);
 
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
@@ -106,6 +174,20 @@ public class Report extends AppCompatActivity {
         if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
         else Log.d("monitor", "report: -------- Job scheduled ---------");
         Log.d("report", "onStart: onstart called !!!!!!!!!!!!!!!!!!");
+    }
+
+    public class LabelFormatter implements IAxisValueFormatter {
+        private String[] mLabels;
+
+        public LabelFormatter(String[] labels) {
+            this.mLabels = labels;
+        }
+
+        @Override
+        public String getFormattedValue(float value, AxisBase axis) {
+            Log.d("value is", "" + value);
+            return mLabels[(int) value];
+        }
     }
 
     public void getUsage() {
@@ -157,4 +239,5 @@ public class Report extends AppCompatActivity {
         Intent intent = new Intent(this, SetPage.class);
         startActivity(intent);
     }
+
 }

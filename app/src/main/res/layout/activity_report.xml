@@ -19,7 +19,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
         app:layout_constraintVertical_bias="0.0" />
 
     <!--<ImageButton-->
@@ -51,41 +50,53 @@
         <!--app:layout_constraintHorizontal_bias="0.0"-->
         <!--app:layout_constraintTop_toTopOf="parent"-->
         <!--android:layout_marginTop="7dp" />-->
-
-    <TextView
-        android:id="@+id/time_remaining"
-        android:layout_width="292dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
-        android:textSize="20sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
-
-    <TextView
-        android:id="@+id/time_limit"
-        android:layout_width="292dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/chart"
+        android:layout_width="326dp"
+        android:layout_height="166dp"
         android:layout_marginTop="8dp"
-        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/selected_applistview"
+        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_remaining" />
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/time_remaining"-->
+        <!--android:layout_width="292dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="64dp"-->
+        <!--android:textSize="20sp"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/toolbar3" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/time_limit"-->
+        <!--android:layout_width="292dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:textSize="20sp"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/time_remaining" />-->
 
     <ScrollView
         android:id="@+id/selected_applistview"
         android:layout_width="347dp"
         android:layout_height="291dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/time_limit"
+        android:layout_below="@+id/chart"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -93,7 +104,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_limit"
+        app:layout_constraintTop_toBottomOf="@+id/chart"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="24dp"
         app:layout_constraintHorizontal_bias="0.333"
@@ -105,12 +116,18 @@
             android:orientation="vertical"
             android:weightSum="1">
 
-            <ListView
-                android:id="@+id/selected_applist"
+            <!--<ListView-->
+                <!--android:id="@+id/selected_applist"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="300dp"-->
+                <!--tools:layout_editor_absoluteX="8dp"-->
+                <!--tools:layout_editor_absoluteY="8dp" />-->
+
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/barchart"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp" />
+                android:layout_height="315dp" />
+
         </LinearLayout>
     </ScrollView>
 
@@ -120,7 +137,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"
-        tools:layout_editor_absoluteX="192dp"
+        tools:layout_editor_absoluteX="180dp"
         tools:layout_editor_absoluteY="0dp" />
 
 </android.support.constraint.ConstraintLayout>
