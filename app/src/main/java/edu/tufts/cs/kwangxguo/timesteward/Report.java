@@ -164,7 +164,6 @@ public class Report extends AppCompatActivity {
         barchart.getAxisRight().setDrawTopYLabelEntry(false);
         barchart.getAxisRight().setDrawLabels(false);
 
-
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
          ********************************************************************/
