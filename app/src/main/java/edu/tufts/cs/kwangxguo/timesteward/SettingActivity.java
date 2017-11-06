@@ -66,7 +66,7 @@ public class SettingActivity extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
-        lp.height = 100 * (installedApps.size()*2);
+        lp.height = 150 * installedApps.size();
         listView.setLayoutParams(lp);
         listView.setAdapter(appListAdapter);
 
@@ -134,6 +134,10 @@ public class SettingActivity extends AppCompatActivity {
                 if (selectedAppPackageNames.size() == 0) {
                     Toast.makeText(getApplicationContext(),
                             "Please select at least one App",
+                            Toast.LENGTH_SHORT).show();
+                } else if (timeLimit == 0) {
+                    Toast.makeText(getApplicationContext(),
+                            "TimeLimit cannot be 0 minute",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(context, Report.class);

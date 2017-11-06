@@ -112,18 +112,18 @@ public class Report extends AppCompatActivity {
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         piechart.setEntryLabelColor(1);
         piechart.setContentDescription("Usage summary");
+        piechart.getDescription().setEnabled(false);
 
         //bar chart
         HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
         List<BarEntry> valueSet = new ArrayList<>();
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
-        lp.height = 80 * selectedApps.size();
-        //lp.height = 80 * 35;
+        lp.height = 100 * selectedApps.size();
+        if (lp.height < 300) lp.height = 300;
         barchart.setLayoutParams(lp);
         String[] labels = new String[selectedApps.size()];
         for (int i = 0; i < selectedApps.size(); i++){
                 labels[i] = (String)packageManager.getApplicationLabel(selectedApps.get(i));
-                Log.d("selectedAppPackageNames",labels[i]);
                 int time = 0;
                 if (usageTime.get(selectedApps.get(i).packageName) != null)
                     time = usageTime.get(selectedApps.get(i).packageName);
@@ -137,9 +137,11 @@ public class Report extends AppCompatActivity {
         bardata.setBarWidth(0.6f);
         barchart.setData(bardata);
         barchart.invalidate();
-        barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
 
-        //hide some axises and gridlines
+        //hide some axises, labels and gridlines
+        barchart.getDescription().setEnabled(false);
+        barchart.getLegend().setEnabled(false);
         barchart.getXAxis().setDrawGridLines(false);
         barchart.getXAxis().setDrawAxisLine(false);
         barchart.getXAxis().setGranularityEnabled(true);
