@@ -25,9 +25,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -39,12 +41,15 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,39 +110,81 @@ public class Report extends AppCompatActivity {
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
         yvalues.add(new PieEntry(usagetime,"Total Time Limit"));
         yvalues.add(new PieEntry(timeRemain,"Remaining Time"));
-        PieDataSet dataSet = new PieDataSet(yvalues, "Time");
+        PieDataSet dataSet = new PieDataSet(yvalues, "");
+        dataSet.setValueTextSize(12f);
         PieData data = new PieData(dataSet);
         piechart.setData(data);
-        piechart.invalidate();
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
         piechart.setEntryLabelColor(1);
         piechart.setContentDescription("Usage summary");
         piechart.getDescription().setEnabled(false);
+//        piechart.setCenterText("Usage Time");
+        piechart.setHoleRadius(40);
+        piechart.setTransparentCircleRadius(50);
+        piechart.setDragDecelerationEnabled(false);
+
+        // edit legend
+        Legend legend = piechart.getLegend();
+        legend.setTextSize(12f);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
+        piechart.invalidate();
+        // add animate
+        piechart.animateXY(2200, 2200);
+
 
         //bar chart
         HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
-        List<BarEntry> valueSet = new ArrayList<>();
+        List<BarEntry> valueList = new ArrayList<>();
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
-        lp.height = 100 * selectedApps.size();
-        if (lp.height < 300) lp.height = 300;
+        lp.height = 100 * usageTime.size();
         barchart.setLayoutParams(lp);
         String[] labels = new String[selectedApps.size()];
-        for (int i = 0; i < selectedApps.size(); i++){
+
+            // sort selectedApps according to usage time before adding them to valueList
+        Collections.sort(selectedApps, new Comparator<ApplicationInfo>() {
+            @Override
+            public int compare(ApplicationInfo o1, ApplicationInfo o2) {
+                if (usageTime.get(o1.packageName) == null) {
+                    return -1;
+                } else if (usageTime.get(o2.packageName) == null) {
+                    return 1;
+                } else {
+                    return - usageTime.get(o2.packageName) + usageTime.get(o1.packageName);
+                }
+            }
+        });
+
+//        for (ApplicationInfo app : selectedApps) {
+//            Log.d("barChart", "onStart: -----" + usageTime.get(app.packageName));
+//        }
+
+        for (int i = selectedApps.size() - 1; i >= 0; --i){
                 labels[i] = (String)packageManager.getApplicationLabel(selectedApps.get(i));
                 int time = 0;
-                if (usageTime.get(selectedApps.get(i).packageName) != null)
+                if (usageTime.get(selectedApps.get(i).packageName) != null) {
                     time = usageTime.get(selectedApps.get(i).packageName);
-                BarEntry e = new BarEntry(i,
-                        time,labels[i]);
-                valueSet.add(e);
+                    BarEntry e = new BarEntry(i, time,labels[i]);
+                    valueList.add(e);
+                }
         }
-        BarDataSet barDataSet = new BarDataSet(valueSet, "");
+
+//        for (BarEntry be : valueList) {
+//            Log.d("barChart", "onStart: " + be.getX() + "   " + be.getY());
+//        }
+
+        BarDataSet barDataSet = new BarDataSet(valueList, "");
 
         BarData bardata = new BarData(barDataSet);
         bardata.setBarWidth(0.6f);
         barchart.setData(bardata);
-        barchart.invalidate();
+        barchart.setFitBars(true);
         barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
+        barchart.setDragEnabled(false);
+        barchart.setDragDecelerationEnabled(false);
+        barchart.setPinchZoom(false);
+        barchart.setDoubleTapToZoomEnabled(false);
+        barchart.setScaleEnabled(false);
 
         //hide some axises, labels and gridlines
         barchart.getDescription().setEnabled(false);
@@ -163,6 +210,10 @@ public class Report extends AppCompatActivity {
         barchart.getAxisRight().setDrawGridLines(false);
         barchart.getAxisRight().setDrawTopYLabelEntry(false);
         barchart.getAxisRight().setDrawLabels(false);
+
+        barchart.invalidate();
+        // add animate
+        barchart.animateY(2600);
 
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
