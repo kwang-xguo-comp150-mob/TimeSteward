@@ -1,6 +1,5 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
-import android.app.ActivityManager;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.app.usage.UsageStats;
@@ -12,36 +11,27 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -55,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Report extends AppCompatActivity {
-    private AppListAdapter2 appListAdapter;
     private PackageManager packageManager;
     private int timeLimit;
     private int timeRemain;
@@ -108,13 +97,13 @@ public class Report extends AppCompatActivity {
         //piechart.setUsePercentValues(true);
         //create dataset for the piechart
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
-        yvalues.add(new PieEntry(usagetime,"Total Time Limit"));
+        yvalues.add(new PieEntry(usagetime,"Total Usage Time"));
         yvalues.add(new PieEntry(timeRemain,"Remaining Time"));
         PieDataSet dataSet = new PieDataSet(yvalues, "");
         dataSet.setValueTextSize(12f);
         PieData data = new PieData(dataSet);
         piechart.setData(data);
-        dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        dataSet.setColors(new int[]{0xfff8d8a4, 0xfff3875d});
         piechart.setEntryLabelColor(1);
         piechart.setContentDescription("Usage summary");
         piechart.getDescription().setEnabled(false);
@@ -130,7 +119,7 @@ public class Report extends AppCompatActivity {
 
         piechart.invalidate();
         // add animate
-        piechart.animateXY(2200, 2200);
+        piechart.animateXY(1900, 1900);
 
 
         //bar chart
@@ -176,6 +165,8 @@ public class Report extends AppCompatActivity {
         BarDataSet barDataSet = new BarDataSet(valueList, "");
 
         BarData bardata = new BarData(barDataSet);
+        bardata.setValueTextSize(10f);
+        bardata.setValueTextColor(0xff707070);
         bardata.setBarWidth(0.6f);
         barchart.setData(bardata);
         barchart.setFitBars(true);
@@ -185,6 +176,9 @@ public class Report extends AppCompatActivity {
         barchart.setPinchZoom(false);
         barchart.setDoubleTapToZoomEnabled(false);
         barchart.setScaleEnabled(false);
+
+        barchart.getXAxis().setTextSize(13f);
+        barchart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
         //hide some axises, labels and gridlines
         barchart.getDescription().setEnabled(false);
@@ -213,7 +207,7 @@ public class Report extends AppCompatActivity {
 
         barchart.invalidate();
         // add animate
-        barchart.animateY(2600);
+        barchart.animateY(2300);
 
         /********************************************************************
          *        Schedule Sticky Background Monitor Service
