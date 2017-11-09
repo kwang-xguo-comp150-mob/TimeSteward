@@ -126,7 +126,7 @@ public class Report extends AppCompatActivity {
         HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
         List<BarEntry> valueList = new ArrayList<>();
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
-        lp.height = 100 * usageTime.size();
+        lp.height = 100 * selectedApps.size();
         barchart.setLayoutParams(lp);
         String[] labels = new String[selectedApps.size()];
 
@@ -153,9 +153,9 @@ public class Report extends AppCompatActivity {
                 int time = 0;
                 if (usageTime.get(selectedApps.get(i).packageName) != null) {
                     time = usageTime.get(selectedApps.get(i).packageName);
+                }
                     BarEntry e = new BarEntry(i, time,labels[i]);
                     valueList.add(e);
-                }
         }
 
 //        for (BarEntry be : valueList) {
