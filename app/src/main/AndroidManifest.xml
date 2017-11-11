@@ -40,7 +40,10 @@
             android:name="io.fabric.ApiKey"
             android:value="0dac5bbe63ab62afb41adfd30d7c43905a4fa0d6" />
 
-        <activity android:name=".UserGuide"></activity>
+        <activity android:name=".UserGuide" />
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".SetPage_offline" />
+        <activity android:name=".Report_offline"></activity>
     </application>
 
 </manifest>

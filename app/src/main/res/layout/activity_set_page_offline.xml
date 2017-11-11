@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="edu.tufts.cs.kwangxguo.timesteward.SetPage">
+    tools:context="edu.tufts.cs.kwangxguo.timesteward.SetPage_offline">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar4b"
@@ -42,7 +41,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <Button
-            android:id="@+id/set_button1a"
+            android:id="@+id/set_button1b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
@@ -53,7 +52,7 @@
             tools:layout_editor_absoluteY="-18dp" />
 
         <Button
-            android:id="@+id/set_button2a"
+            android:id="@+id/set_button2b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
@@ -64,7 +63,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/set_button3a"
+            android:id="@+id/set_button3b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
@@ -75,7 +74,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/set_button4a"
+            android:id="@+id/set_button4b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
@@ -86,7 +85,7 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/set_button5a"
+            android:id="@+id/set_button5b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
@@ -97,16 +96,15 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/set_button7"
+            android:id="@+id/set_button6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:text="Sign Out"
+            android:text="Sign In"
             android:textAlignment="center"
             android:textAllCaps="false"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="437dp" />
 
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

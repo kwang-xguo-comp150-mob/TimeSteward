@@ -8,25 +8,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
+public class SetPage_offline extends AppCompatActivity {
 
-public class SetPage extends AppCompatActivity {
-    Button button1, button2, button3, button4, button5, button6, button7;
+    Button button1, button2, button3, button4, button5, button6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_page);
+        setContentView(R.layout.activity_set_page_offline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4b);
         setSupportActionBar(toolbar);
 
-        button1 = (Button)findViewById(R.id.set_button1a);
-        button2 = (Button)findViewById(R.id.set_button2a);
-        button3 = (Button)findViewById(R.id.set_button3a);
-        button4 = (Button)findViewById(R.id.set_button4a);
-        button5 = (Button)findViewById(R.id.set_button5a);
-        button7 = (Button)findViewById(R.id.set_button7);
+        button1 = (Button)findViewById(R.id.set_button1b);
+        button2 = (Button)findViewById(R.id.set_button2b);
+        button3 = (Button)findViewById(R.id.set_button3b);
+        button4 = (Button)findViewById(R.id.set_button4b);
+        button5 = (Button)findViewById(R.id.set_button5b);
+        button6 = (Button)findViewById(R.id.set_button6);
 
         addListenerOnButton();
     }
@@ -63,12 +62,9 @@ public class SetPage extends AppCompatActivity {
             }
         });
 
-        button7.setOnClickListener(new View.OnClickListener() {
+        button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (FirebaseAuth.getInstance() != null) {
-                    FirebaseAuth.getInstance().signOut();
-                }
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
             }
