@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -52,6 +54,7 @@ public class Report extends AppCompatActivity {
     private ArrayList<ApplicationInfo> selectedApps;
     private ArrayList<String> selectedAppPackageNames;
     private HashMap<String,Integer> usageTime = new HashMap<String, Integer>();
+    private Button lastSeven;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class Report extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
+        lastSeven = (Button) findViewById(R.id.lastSeven);
 
         packageManager = getPackageManager();
         selectedApps = new ArrayList<>();
@@ -81,8 +85,8 @@ public class Report extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
-
-        for (String name : selectedAppPackageNames) Log.d("report", "onCreate: selected: " + name);
+        //for (String name : selectedAppPackageNames) Log.d("report", "onCreate: selected: " + name);
+        addListenerOnButton();
     }
 
     @Override
@@ -285,4 +289,14 @@ public class Report extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void addListenerOnButton() {
+        final Context context = this;
+        lastSeven.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            Intent intent = new Intent(context, Last_seven_days.class);
+            startActivity(intent);
+            }
+        });
+    }
 }

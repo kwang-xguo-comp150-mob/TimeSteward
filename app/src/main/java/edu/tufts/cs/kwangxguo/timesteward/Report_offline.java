@@ -56,7 +56,7 @@ public class Report_offline extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
+        setContentView(R.layout.activity_report_offline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);

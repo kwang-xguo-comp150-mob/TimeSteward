@@ -43,7 +43,8 @@
         <activity android:name=".UserGuide" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".SetPage_offline" />
-        <activity android:name=".Report_offline"></activity>
+        <activity android:name=".Report_offline" />
+        <activity android:name=".Last_seven_days"></activity>
     </application>
 
 </manifest>

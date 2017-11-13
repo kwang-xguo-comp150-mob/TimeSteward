@@ -50,8 +50,13 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onStart(){
         super.onStart();
+        final Context context = this;
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(context, Report.class);
+            startActivity(intent);
+        }
         //updateUI(currentUser);
     }
     // [END on_start_check_user]
