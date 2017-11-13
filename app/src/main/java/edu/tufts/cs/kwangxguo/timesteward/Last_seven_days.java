@@ -1,12 +1,17 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -24,6 +29,10 @@ import java.util.List;
 public class Last_seven_days extends AppCompatActivity {
     private ArrayList<Integer> timelimit;
     private ArrayList<Integer> usagetime;
+    private ImageButton left;
+    private ImageButton right;
+    private int leftCount;
+    private String[] labels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +41,11 @@ public class Last_seven_days extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
+
+        left = findViewById(R.id.left);
+        right = findViewById(R.id.right);
+        addListenerOnButton();
+        leftCount = 0;
     }
 
     @Override
@@ -40,18 +54,70 @@ public class Last_seven_days extends AppCompatActivity {
 
         timelimit = new ArrayList<Integer>();
         usagetime = new ArrayList<Integer>();
+
         //get the timelimit list and usagetime list to replace these later
         for (int i = 0; i < 7; i++) {
             timelimit.add(i*20 + 1);
             usagetime.add(i*20 + 5);
         }
-
         // should be the date
-        String[] labels = new String[7];
+        labels = new String[7];
         for (int i = 0; i < 7; i++) {
             labels[i] = "date";
         }
 
+        draw_bar(timelimit,usagetime,labels);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.report_menu, menu);
+        return true;
+    }
+    public void onMenuAction(MenuItem mi){
+
+    }
+    public void onSettingAction(MenuItem mi){
+        Intent intent = new Intent(this, SetPage.class);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Report.class);
+        startActivity(intent);
+    }
+
+    public void addListenerOnButton() {
+        final Context context = this;
+        left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                leftCount++;
+                for (int i = 0; i < 7; i++) {
+                    timelimit.set(i,i*(20+leftCount) + 1);
+                    usagetime.set(i,i*(20+leftCount) + 5);
+                }
+                draw_bar(timelimit,usagetime,labels);
+            }
+        });
+
+        right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (leftCount > 0 ) leftCount--;
+                for (int i = 0; i < 7; i++) {
+                    timelimit.set(i,i*(20+leftCount) + 1);
+                    usagetime.set(i,i*(20+leftCount) + 5);
+                }
+                draw_bar(timelimit,usagetime,labels);
+            }
+        });
+    }
+
+    public void draw_bar(ArrayList<Integer> timelimit, ArrayList<Integer> usagetime, String labels[]){
         HorizontalBarChart barchart2 = (HorizontalBarChart) findViewById(R.id.barchart2);
         List<BarEntry> yVals1 = new ArrayList<>();
         List<BarEntry> yVals2 = new ArrayList<>();
@@ -61,9 +127,10 @@ public class Last_seven_days extends AppCompatActivity {
         }
         BarDataSet set1, set2;
         set1 = new BarDataSet(yVals1, "Limit Time");
-        set1.setColor(Color.RED);
+        //Color c1 = new Color(255, 156, 99);
+        set1.setColor(0xFFffa860);
         set2 = new BarDataSet(yVals2, "Usage Time");
-        set2.setColor(Color.BLUE);
+        set2.setColor(0xFF59C2E5);
         BarData data = new BarData(set1, set2);
         data.setValueFormatter(new LargeValueFormatter());
         barchart2.setData(data);
@@ -103,26 +170,5 @@ public class Last_seven_days extends AppCompatActivity {
         l.setXOffset(0f);
         l.setYEntrySpace(0f);
         l.setTextSize(8f);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.report_menu, menu);
-        return true;
-    }
-    public void onMenuAction(MenuItem mi){
-
-    }
-    public void onSettingAction(MenuItem mi){
-        Intent intent = new Intent(this, SetPage.class);
-        startActivity(intent);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, Report.class);
-        startActivity(intent);
     }
 }
