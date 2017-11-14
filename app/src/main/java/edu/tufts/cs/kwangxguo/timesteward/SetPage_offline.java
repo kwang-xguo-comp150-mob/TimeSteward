@@ -22,7 +22,7 @@ public class SetPage_offline extends AppCompatActivity {
 
         button1 = (Button)findViewById(R.id.set_button1b);
         button2 = (Button)findViewById(R.id.set_button2b);
-        button3 = (Button)findViewById(R.id.set_button3b);
+        //button3 = (Button)findViewById(R.id.set_button3b);
         button4 = (Button)findViewById(R.id.set_button4b);
         button5 = (Button)findViewById(R.id.set_button5b);
         button6 = (Button)findViewById(R.id.set_button6);

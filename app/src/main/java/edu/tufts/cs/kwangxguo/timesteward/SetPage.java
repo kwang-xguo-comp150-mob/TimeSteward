@@ -25,7 +25,7 @@ public class SetPage extends AppCompatActivity {
         String email = user.getEmail();
         button1 = (Button)findViewById(R.id.set_button1a);
         button2 = (Button)findViewById(R.id.set_button2a);
-        button3 = (Button)findViewById(R.id.set_button3a);
+        //button3 = (Button)findViewById(R.id.set_button3a);
         button4 = (Button)findViewById(R.id.set_button4a);
         button5 = (Button)findViewById(R.id.set_button5a);
         button7 = (Button)findViewById(R.id.set_button7);

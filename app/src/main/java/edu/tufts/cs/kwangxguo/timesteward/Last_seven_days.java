@@ -61,13 +61,13 @@ public class Last_seven_days extends AppCompatActivity {
         leftCount = 0;
 
     }
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        //when retrieve data successfully, draw the chart
-//
-//    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //when retrieve data successfully, draw the chart
+        mCheckInforInServer();
+    }
 
     public interface OnGetDataListener {
         void onStart();
@@ -108,8 +108,10 @@ public class Last_seven_days extends AppCompatActivity {
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (leftCount > 0 ) leftCount--;
-                mCheckInforInServer();
+                if (leftCount > 0 ) {
+                    leftCount--;
+                    mCheckInforInServer();
+                }
             }
         });
     }
@@ -207,7 +209,12 @@ public class Last_seven_days extends AppCompatActivity {
         barchart2.getXAxis().setAxisMaximum(0 + barchart2.getBarData().getGroupWidth(0.4f, 0f) * 7);
         barchart2.groupBars(0, 0.4f, 0f);
         barchart2.getData().setHighlightEnabled(false);
-        barchart2.invalidate();
+
+        barchart2.setDragEnabled(false);
+        barchart2.setDragDecelerationEnabled(false);
+        barchart2.setPinchZoom(false);
+        barchart2.setDoubleTapToZoomEnabled(false);
+        barchart2.setScaleEnabled(false);
 
         //X-axis
         XAxis xAxis = barchart2.getXAxis();
@@ -215,18 +222,35 @@ public class Last_seven_days extends AppCompatActivity {
         xAxis.setGranularityEnabled(true);
         xAxis.setCenterAxisLabels(true);
         xAxis.setDrawGridLines(false);
-        xAxis.setAxisMaximum(7);
+        //xAxis.setAxisMaximum(7);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
         //Y-axis
         barchart2.getAxisRight().setEnabled(false);
         YAxis leftAxis = barchart2.getAxisLeft();
         leftAxis.setValueFormatter(new LargeValueFormatter());
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setSpaceTop(35f);
+        leftAxis.setDrawGridLines(false);
+        //leftAxis.setSpaceTop(35f);
         leftAxis.setAxisMinimum(0f);
 
         barchart2.getDescription().setEnabled(false);
+
+        barchart2.getAxisLeft().setDrawTopYLabelEntry(false);
+        barchart2.getAxisLeft().setDrawLimitLinesBehindData(false);
+        barchart2.getAxisLeft().setDrawAxisLine(false);
+        barchart2.getAxisLeft().setDrawZeroLine(false);
+        barchart2.getAxisLeft().setDrawLabels(false);
+
+        barchart2.getAxisRight().setDrawZeroLine(false);
+        barchart2.getAxisRight().setDrawLimitLinesBehindData(false);
+        barchart2.getAxisRight().setDrawAxisLine(false);
+        barchart2.getAxisRight().setDrawGridLines(false);
+        barchart2.getAxisRight().setDrawTopYLabelEntry(false);
+        barchart2.getAxisRight().setDrawLabels(false);
+
+        barchart2.invalidate();
+
+
 
         Legend l = barchart2.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
@@ -237,5 +261,7 @@ public class Last_seven_days extends AppCompatActivity {
         l.setXOffset(0f);
         l.setYEntrySpace(0f);
         l.setTextSize(6f);
+
+        barchart2.animateY(2000);
     }
 }

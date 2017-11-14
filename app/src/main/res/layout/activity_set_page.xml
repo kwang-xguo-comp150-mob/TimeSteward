@@ -64,17 +64,6 @@
             android:textAllCaps="false" />
 
         <Button
-            android:id="@+id/set_button3a"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:layout_marginTop="0dp"
-            android:background="#ffffff"
-            android:text="Link Social Network"
-            android:textAlignment="center"
-            android:textAllCaps="false" />
-
-        <Button
             android:id="@+id/set_button4a"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
