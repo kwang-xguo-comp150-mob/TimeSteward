@@ -97,7 +97,7 @@ public class Report extends AppCompatActivity {
         // get the current user's uid and current date, this part should be placed to the backgroundMonitor
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("test");
+        mDatabase = FirebaseDatabase.getInstance().getReference("user-time");
         if (user != null) {
             String uid = user.getUid();
             //today
@@ -300,9 +300,7 @@ public class Report extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.report_menu, menu);
         return true;
     }
-    public void onMenuAction(MenuItem mi){
 
-    }
     public void onSettingAction(MenuItem mi){
         Intent intent = new Intent(this, SetPage.class);
         startActivity(intent);

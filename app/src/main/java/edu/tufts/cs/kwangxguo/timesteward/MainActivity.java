@@ -34,7 +34,7 @@ import java.util.Date;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity {
-    private Button signInButton, registerButton, offLineButton;
+    private Button signInButton, registerButton, offLineButton, forgotButton;
     private EditText emailField, passwordField;
     private FirebaseAuth mAuth;
     @Override
@@ -45,43 +45,13 @@ public class MainActivity extends BaseActivity {
         signInButton = (Button)findViewById(R.id.button1);
         offLineButton = (Button)findViewById(R.id.button2);
         registerButton = (Button)findViewById(R.id.button3);
+        forgotButton = findViewById(R.id.forgetButton);
         emailField = (EditText)findViewById(R.id.input_username);
         passwordField = (EditText)findViewById(R.id.input_password);
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
-
-          // a firebase test
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("test");
-//        myRef.setValue("Hello, World!");
-//
-//        //To make your app data update in realtime, you should add a ValueEventListener to the reference you just created.
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d("DATABASE", "Value is: " + value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w("DATABASE", "Failed to read value.", error.toException());
-//            }
-//        });
-//
-//        //another database test
-//        DatabaseReference mDatabase;
-//        mDatabase = FirebaseDatabase.getInstance().getReference("UserDate");
-//        String id = "testuser1"+"_"+"20171113";
-//        //creating a user object
-//        User user = new User(100,120);
-//        //pushing user to "UserDate" node
-//        mDatabase.child(id).setValue(user);
 
         addListenerOnButton();
     }
@@ -133,6 +103,27 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
             register(emailField.getText().toString(), passwordField.getText().toString());
+            }
+        });
+
+        forgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = emailField.getText().toString().trim();
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(getApplication(), "Please Enter your registered email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }

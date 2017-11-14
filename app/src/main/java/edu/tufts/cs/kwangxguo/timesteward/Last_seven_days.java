@@ -145,7 +145,7 @@ public class Last_seven_days extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (int i = 0; i < 7; i++) {
                         String id = user.getUid() + "_" + labels[i];
-                        User u = dataSnapshot.child("test").child(id).getValue(User.class);
+                        User u = dataSnapshot.child("user-time").child(id).getValue(User.class);
                         if (u != null){
                             timelimit.add(u.timelimit);
                             usagetime.add(u.usagetime);

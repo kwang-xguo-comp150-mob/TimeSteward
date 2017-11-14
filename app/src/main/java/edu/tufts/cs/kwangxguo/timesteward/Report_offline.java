@@ -269,10 +269,6 @@ public class Report_offline extends AppCompatActivity {
         return true;
     }
 
-    public void onMenuAction(MenuItem mi) {
-
-    }
-
     public void onSettingAction(MenuItem mi) {
         Intent intent = new Intent(this, SetPage_offline.class);
         startActivity(intent);
