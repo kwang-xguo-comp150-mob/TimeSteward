@@ -83,9 +83,6 @@ public class Report_offline extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
-
-        for (String name : selectedAppPackageNames)
-            Log.d("report", "onCreate: selected: " + name);
     }
 
     @Override
@@ -147,10 +144,6 @@ public class Report_offline extends AppCompatActivity {
             }
         });
 
-//        for (ApplicationInfo app : selectedApps) {
-//            Log.d("barChart", "onStart: -----" + usageTime.get(app.packageName));
-//        }
-
         for (int i = selectedApps.size() - 1; i >= 0; --i) {
             labels[i] = (String) packageManager.getApplicationLabel(selectedApps.get(i));
             int time = 0;
@@ -160,10 +153,6 @@ public class Report_offline extends AppCompatActivity {
             BarEntry e = new BarEntry(i, time, labels[i]);
             valueList.add(e);
         }
-
-//        for (BarEntry be : valueList) {
-//            Log.d("barChart", "onStart: " + be.getX() + "   " + be.getY());
-//        }
 
         BarDataSet barDataSet = new BarDataSet(valueList, "");
 
@@ -233,7 +222,6 @@ public class Report_offline extends AppCompatActivity {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            Log.d("value is", "" + value);
             return mLabels[(int) value];
         }
     }

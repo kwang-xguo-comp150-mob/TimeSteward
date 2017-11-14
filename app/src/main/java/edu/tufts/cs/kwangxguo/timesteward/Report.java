@@ -34,14 +34,20 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +91,25 @@ public class Report extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
-        //for (String name : selectedAppPackageNames) Log.d("report", "onCreate: selected: " + name);
+
+        // get the current user's uid and current date, this part should be placed to the backgroundMonitor
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference("test");
+        if (user != null) {
+            String uid = user.getUid();
+            // String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+            // 6 days before today
+            String date = new SimpleDateFormat("yyyy-MM-dd").format
+                    (new Date(System.currentTimeMillis() - 6*(1000 * 60 * 60 * 24)));
+            String id = uid + "_" + date;
+            //Log.d("current date",id);
+            User u = new User(90,110);
+            //pushing user to "UserDate" node
+            mDatabase.child(id).setValue(u);
+        }
+
         addListenerOnButton();
     }
 
@@ -148,10 +172,6 @@ public class Report extends AppCompatActivity {
             }
         });
 
-//        for (ApplicationInfo app : selectedApps) {
-//            Log.d("barChart", "onStart: -----" + usageTime.get(app.packageName));
-//        }
-
         for (int i = selectedApps.size() - 1; i >= 0; --i){
                 labels[i] = (String)packageManager.getApplicationLabel(selectedApps.get(i));
                 int time = 0;
@@ -161,10 +181,6 @@ public class Report extends AppCompatActivity {
                     BarEntry e = new BarEntry(i, time,labels[i]);
                     valueList.add(e);
         }
-
-//        for (BarEntry be : valueList) {
-//            Log.d("barChart", "onStart: " + be.getX() + "   " + be.getY());
-//        }
 
         BarDataSet barDataSet = new BarDataSet(valueList, "");
 
@@ -234,7 +250,6 @@ public class Report extends AppCompatActivity {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            Log.d("value is", "" + value);
             return mLabels[(int) value];
         }
     }

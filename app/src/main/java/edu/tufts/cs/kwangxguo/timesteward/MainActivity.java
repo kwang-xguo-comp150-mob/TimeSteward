@@ -22,6 +22,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity {
@@ -42,6 +51,37 @@ public class MainActivity extends BaseActivity {
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
+
+          // a firebase test
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("test");
+//        myRef.setValue("Hello, World!");
+//
+//        //To make your app data update in realtime, you should add a ValueEventListener to the reference you just created.
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                String value = dataSnapshot.getValue(String.class);
+//                Log.d("DATABASE", "Value is: " + value);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w("DATABASE", "Failed to read value.", error.toException());
+//            }
+//        });
+//
+//        //another database test
+//        DatabaseReference mDatabase;
+//        mDatabase = FirebaseDatabase.getInstance().getReference("UserDate");
+//        String id = "testuser1"+"_"+"20171113";
+//        //creating a user object
+//        User user = new User(100,120);
+//        //pushing user to "UserDate" node
+//        mDatabase.child(id).setValue(user);
 
         addListenerOnButton();
     }
