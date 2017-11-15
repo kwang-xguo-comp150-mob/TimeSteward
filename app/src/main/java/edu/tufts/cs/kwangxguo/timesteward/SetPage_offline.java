@@ -46,6 +46,14 @@ public class SetPage_offline extends AppCompatActivity {
             }
         });
 
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, Notification.class);
+                startActivity(intent);
+            }
+        });
+
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

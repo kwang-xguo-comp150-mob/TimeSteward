@@ -48,7 +48,13 @@ public class SetPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, Notification.class);
+                startActivity(intent);
+            }
+        });
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
