@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -52,7 +54,7 @@ public class Report_offline extends AppCompatActivity {
     private ArrayList<ApplicationInfo> selectedApps;
     private ArrayList<String> selectedAppPackageNames;
     private HashMap<String, Integer> usageTime = new HashMap<String, Integer>();
-
+    private Button lastSeven;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class Report_offline extends AppCompatActivity {
 
         packageManager = getPackageManager();
         selectedApps = new ArrayList<>();
+        lastSeven = findViewById(R.id.SignUp);
 
         SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
         Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
@@ -83,6 +86,8 @@ public class Report_offline extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
+
+        addListenerOnButton();
     }
 
     @Override
@@ -272,5 +277,16 @@ public class Report_offline extends AppCompatActivity {
     public void onSettingAction(MenuItem mi) {
         Intent intent = new Intent(this, SetPage_offline.class);
         startActivity(intent);
+    }
+
+    public void addListenerOnButton() {
+        final Context context = this;
+        lastSeven.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

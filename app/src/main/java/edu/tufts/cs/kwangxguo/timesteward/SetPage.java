@@ -70,6 +70,9 @@ public class SetPage extends AppCompatActivity {
             public void onClick(View view) {
                 if (FirebaseAuth.getInstance() != null) {
                     FirebaseAuth.getInstance().signOut();
+
+                    //might need to delete the database when user sign out
+                    //context.deleteDatabase("setting.db");
                 }
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
