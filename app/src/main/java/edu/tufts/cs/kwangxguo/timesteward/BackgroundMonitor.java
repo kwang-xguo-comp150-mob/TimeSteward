@@ -93,20 +93,20 @@ public class BackgroundMonitor extends JobService {
         }
 
         //build notification
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher_round2)
-                        .setContentTitle("Time is up !")
-                        .setContentText("You have spent your time on your phone for " + totalTime + " minutes.")
-                        .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
-                        .setPriority(NotificationCompat.PRIORITY_HIGH); //must give priority to High, Max which will considered as heads-up notification
-
-        // Gets an instance of the NotificationManager service
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
-        notificationManager.notify(0, builder.build());
-
+        if (selectedPackageNames.contains(currentRunningPackageName)) {
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_launcher_round2)
+                            .setContentTitle("Time is up !")
+                            .setContentText("You have spent your time on your phone for " + totalTime + " minutes.")
+                            .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
+                            .setPriority(NotificationCompat.PRIORITY_HIGH); //must give priority to High, Max which will considered as heads-up notification
+            // Gets an instance of the NotificationManager service
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            //to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
+            notificationManager.notify(0, builder.build());
+        }
         Log.d("monitor", "onCreate: current app is " + currentRunningPackageName);
         return false;
     }
