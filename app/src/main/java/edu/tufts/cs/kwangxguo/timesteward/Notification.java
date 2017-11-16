@@ -106,7 +106,7 @@ public class Notification extends AppCompatActivity {
                 // store the start_point in SQLite
 //                SQLiteDatabase db = openOrCreateDatabase("notification.db", Context.MODE_PRIVATE, null);
                 value.put("start_point", progressChangedValue);
-                
+
             }
         });
 
@@ -161,6 +161,8 @@ public class Notification extends AppCompatActivity {
                             "Entry cannot be 0 minute",
                             Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.d("notification", "onClick: start: " + value.get("start_point") + " gentle: " + value.get("gentle_interval") + " intense: " + value.get("intense_interval"));
+                    finalDb_notification.execSQL("DELETE FROM NOTIFICATION");
                     finalDb_notification.insert("Notification", null, value);
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                     if (auth.getCurrentUser() != null) {
