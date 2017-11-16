@@ -3,7 +3,6 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -17,15 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
-import static android.R.attr.id;
-import static edu.tufts.cs.kwangxguo.timesteward.R.id.clear_button;
-import static edu.tufts.cs.kwangxguo.timesteward.R.id.start;
 
 public class Notification extends AppCompatActivity {
     private SeekBar sb1,sb2,sb3;
@@ -116,6 +106,7 @@ public class Notification extends AppCompatActivity {
                 // store the start_point in SQLite
 //                SQLiteDatabase db = openOrCreateDatabase("notification.db", Context.MODE_PRIVATE, null);
                 value.put("start_point", progressChangedValue);
+                
             }
         });
 

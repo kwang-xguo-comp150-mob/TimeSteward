@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -35,6 +36,9 @@ public class BackgroundMonitor extends JobService {
     private int timeRemaining;
     private String currentRunningPackageName;
     private PowerManager powerManager;
+    private int start_point;
+    private int gentle_interval;
+    private int intense_interval;
 
     @Override
     public void onCreate() {
@@ -56,6 +60,7 @@ public class BackgroundMonitor extends JobService {
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         Gson gson = new Gson();
         selectedPackageNames = gson.fromJson(selectedAppNames_string, type);
+
     }
 
     @Override
@@ -66,6 +71,26 @@ public class BackgroundMonitor extends JobService {
             Log.d("monitor", "onStartJob: Screen is off, mute.");
             return false;
         }
+
+        // get start_point, gentle_interval and intense_interval from Notification database
+        SQLiteDatabase db_notification = null;
+        String path = this.getDatabasePath("notification.db").getAbsolutePath();
+        try {
+            db_notification = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
+        } catch(SQLiteException e) {
+            Log.d("notification", "AppListAdapter: db doesn't exist !!!!!!!!");
+        }
+        if (db_notification != null) {
+            Cursor cursor_notification = db_notification.rawQuery("SELECT * FROM NOTIFICATION", null);
+            cursor_notification.moveToFirst();
+            start_point = cursor_notification.getInt(0);
+            gentle_interval = cursor_notification.getInt(1);
+            intense_interval = cursor_notification.getInt(2);
+            Log.d("monitors", "onStart: start: " + start_point + " gentle: " + gentle_interval + " intense: " + intense_interval);
+        } else {
+            Log.d("monitors", "onStartJob: sasdasdadasdasd");
+        }
+
         // if time limit is up, pop up notification
         if (selectedPackageNames.contains(currentRunningPackageName) && timeRemaining <= 0) {
             //build notification
