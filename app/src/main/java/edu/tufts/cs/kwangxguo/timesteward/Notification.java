@@ -1,5 +1,8 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -166,6 +169,12 @@ public class Notification extends AppCompatActivity {
                     finalDb_notification.insert("Notification", null, value);
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                     if (auth.getCurrentUser() != null) {
+                        // scheduler the background service, such that it can apply the setting
+                        JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(getApplicationContext(), BackgroundMonitor.class));
+                        builder.setMinimumLatency((long)5e3);
+                        JobScheduler js = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
+                        // Jump to report page
                         Intent intent = new Intent(getApplicationContext(), Report.class);
                         startActivity(intent);
                     } else {

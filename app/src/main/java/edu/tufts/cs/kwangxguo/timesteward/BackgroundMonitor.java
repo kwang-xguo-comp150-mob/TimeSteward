@@ -15,6 +15,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -87,27 +90,22 @@ public class BackgroundMonitor extends JobService {
             gentle_interval = cursor_notification.getInt(1);
             intense_interval = cursor_notification.getInt(2);
             Log.d("monitors", "onStart: start: " + start_point + " gentle: " + gentle_interval + " intense: " + intense_interval);
-        } else {
-            Log.d("monitors", "onStartJob: sasdasdadasdasd");
         }
 
-        // if time limit is up, pop up notification
-        if (selectedPackageNames.contains(currentRunningPackageName) && timeRemaining <= 0) {
-            //build notification
-            NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.clock)
-                            .setContentTitle("Time Steward")
-                            .setContentText("Time is up !")
-                            .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
-                            .setPriority(NotificationCompat.PRIORITY_HIGH); //must give priority to High, Max which will considered as heads-up notification
+        //build notification
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher_round2)
+                        .setContentTitle("Time is up !")
+                        .setContentText("You have spent your time on your phone for " + totalTime + " minutes.")
+                        .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
+                        .setPriority(NotificationCompat.PRIORITY_HIGH); //must give priority to High, Max which will considered as heads-up notification
 
-            // Gets an instance of the NotificationManager service
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            //to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
-            notificationManager.notify(0, builder.build());
-        }
+        // Gets an instance of the NotificationManager service
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //to post your notification to the notification bar with a id. If a notification with same id already exists, it will get replaced with updated information.
+        notificationManager.notify(0, builder.build());
 
         Log.d("monitor", "onCreate: current app is " + currentRunningPackageName);
         return false;
@@ -126,11 +124,16 @@ public class BackgroundMonitor extends JobService {
 
         JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
 
-        // if timeRemaining is larger than 3 minutes, next check will be in 'timeRemaining' minutes;
+        // |------------------------------—————|————————————---——--------————--—————|————————————————————————————————> time line
+        // 0     gentle_interval          start_point      intense interval     time's up     3 minutes per alert
+
         int minLatency;
-        if (timeRemaining > 3) {
-            minLatency = timeRemaining * 60 * 1000;
+        if (totalTime < start_point) {
+            minLatency = gentle_interval * 60 * 1000;
+        } else if (totalTime > start_point && timeRemaining > 0) {
+            minLatency = intense_interval * 60 * 1000;
         } else {
+            // timeRemaining < 0, 3 minutes per alert
             minLatency = 3 * 60 * 1000;
         }
         builder.setMinimumLatency(minLatency); // should be minLatency
