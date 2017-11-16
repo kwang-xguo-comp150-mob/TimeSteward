@@ -2,8 +2,6 @@ package edu.tufts.cs.kwangxguo.timesteward;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -34,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class Last_seven_days extends AppCompatActivity {
@@ -230,9 +226,7 @@ public class Last_seven_days extends AppCompatActivity {
         YAxis leftAxis = barchart2.getAxisLeft();
         leftAxis.setValueFormatter(new LargeValueFormatter());
         leftAxis.setDrawGridLines(false);
-        //leftAxis.setSpaceTop(35f);
         leftAxis.setAxisMinimum(0f);
-
         barchart2.getDescription().setEnabled(false);
 
         barchart2.getAxisLeft().setDrawTopYLabelEntry(false);
@@ -249,9 +243,6 @@ public class Last_seven_days extends AppCompatActivity {
         barchart2.getAxisRight().setDrawLabels(false);
 
         barchart2.invalidate();
-
-
-
         Legend l = barchart2.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);

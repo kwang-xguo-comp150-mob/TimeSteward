@@ -66,9 +66,9 @@ public class Report extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
+        Toolbar toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
-        lastSeven = (Button) findViewById(R.id.lastSeven);
+        lastSeven = findViewById(R.id.lastSeven);
 
         packageManager = getPackageManager();
         selectedApps = new ArrayList<>();
@@ -126,7 +126,6 @@ public class Report extends AppCompatActivity {
 
         //piechart
         PieChart piechart = (PieChart) findViewById(R.id.chart);
-        //piechart.setUsePercentValues(true);
         //create dataset for the piechart
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
         yvalues.add(new PieEntry(usagetime,"Total Usage Time"));
@@ -139,7 +138,6 @@ public class Report extends AppCompatActivity {
         piechart.setEntryLabelColor(1);
         piechart.setContentDescription("Usage summary");
         piechart.getDescription().setEnabled(false);
-//        piechart.setCenterText("Usage Time");
         piechart.setHoleRadius(40);
         piechart.setTransparentCircleRadius(50);
         piechart.setDragDecelerationEnabled(false);
@@ -148,11 +146,8 @@ public class Report extends AppCompatActivity {
         Legend legend = piechart.getLegend();
         legend.setTextSize(12f);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-
         piechart.invalidate();
-        // add animate
         piechart.animateXY(1900, 1900);
-
 
         //bar chart
         HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
@@ -162,7 +157,7 @@ public class Report extends AppCompatActivity {
         barchart.setLayoutParams(lp);
         String[] labels = new String[selectedApps.size()];
 
-            // sort selectedApps according to usage time before adding them to valueList
+        // sort selectedApps according to usage time before adding them to valueList
         Collections.sort(selectedApps, new Comparator<ApplicationInfo>() {
             @Override
             public int compare(ApplicationInfo o1, ApplicationInfo o2) {
@@ -230,7 +225,6 @@ public class Report extends AppCompatActivity {
         barchart.getAxisRight().setDrawLabels(false);
 
         barchart.invalidate();
-        // add animate
         barchart.animateY(2300);
 
         /********************************************************************

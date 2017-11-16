@@ -1,6 +1,5 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -27,14 +26,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-/**
- * Created by Guo on 10/5/17.
- */
 
 class AppListAdapter extends ArrayAdapter {
 
@@ -50,7 +43,6 @@ class AppListAdapter extends ArrayAdapter {
         packageNamesInDB = new HashSet<>();
         SQLiteDatabase db = null;
         String path = context.getDatabasePath("setting.db").getAbsolutePath();
-        Log.d("setting", "AppListAdapter: " + path);
         try {
             db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
         } catch(SQLiteException e) {

@@ -3,7 +3,6 @@ package edu.tufts.cs.kwangxguo.timesteward;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
@@ -22,15 +21,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity {
@@ -42,12 +32,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
-        signInButton = (Button)findViewById(R.id.button1);
-        offLineButton = (Button)findViewById(R.id.button2);
-        registerButton = (Button)findViewById(R.id.button3);
+        signInButton = findViewById(R.id.button1);
+        offLineButton = findViewById(R.id.button2);
+        registerButton = findViewById(R.id.button3);
         forgotButton = findViewById(R.id.forgetButton);
-        emailField = (EditText)findViewById(R.id.input_username);
-        passwordField = (EditText)findViewById(R.id.input_password);
+        emailField = findViewById(R.id.input_username);
+        passwordField = findViewById(R.id.input_password);
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
@@ -67,7 +57,6 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(context, Report.class);
             startActivity(intent);
         }
-        //updateUI(currentUser);
     }
     // [END on_start_check_user]
 
@@ -168,14 +157,11 @@ public class MainActivity extends BaseActivity {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Good", "signInWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
-
-                    //updateUI(user);
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Bad", "signInWithEmail:failure", task.getException());
                     Toast.makeText(MainActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
-                    //updateUI(null);
                 }
 
                 // [START_EXCLUDE]
@@ -224,13 +210,11 @@ public class MainActivity extends BaseActivity {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Good", "createUserWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
-                    //updateUI(user);
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Bad", "createUserWithEmail:failure", task.getException());
                     Toast.makeText(MainActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
-                    //updateUI(null);
                 }
                 // [START_EXCLUDE]
                 hideProgressDialog();
@@ -243,27 +227,6 @@ public class MainActivity extends BaseActivity {
             });
         // [END create_user_with_email]
     }
-//    private void updateUI(FirebaseUser user) {
-//        hideProgressDialog();
-//        if (user != null) {
-//            //mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
-//                    user.getEmail(), user.isEmailVerified()));
-//            //mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-//
-//            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-//            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-//            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
-//
-//            findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
-//        } else {
-//            //mStatusTextView.setText(R.string.signed_out);
-//            //mDetailTextView.setText(null);
-//
-//            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-//            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-//            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
-//        }
-//    }
 
     private boolean dbexist() {
         SQLiteDatabase checkDB = null;
@@ -300,9 +263,4 @@ public class MainActivity extends BaseActivity {
         Log.d("main", "dbIsEmpty: db is not empty");
         return empty;
     }
-
-    /*public void forceCrash(View view) {
-        throw new RuntimeException("This is a crash");
-    }
-    */
 }

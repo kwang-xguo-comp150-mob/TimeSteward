@@ -60,7 +60,7 @@ public class Report_offline extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_offline);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
+        Toolbar toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
 
         packageManager = getPackageManager();
@@ -98,8 +98,7 @@ public class Report_offline extends AppCompatActivity {
         getUsage();
 
         //piechart
-        PieChart piechart = (PieChart) findViewById(R.id.chart);
-        //piechart.setUsePercentValues(true);
+        PieChart piechart = findViewById(R.id.chart);
         //create dataset for the piechart
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
         yvalues.add(new PieEntry(usagetime, "Total Usage Time"));
@@ -112,7 +111,6 @@ public class Report_offline extends AppCompatActivity {
         piechart.setEntryLabelColor(1);
         piechart.setContentDescription("Usage summary");
         piechart.getDescription().setEnabled(false);
-//        piechart.setCenterText("Usage Time");
         piechart.setHoleRadius(40);
         piechart.setTransparentCircleRadius(50);
         piechart.setDragDecelerationEnabled(false);
@@ -123,12 +121,10 @@ public class Report_offline extends AppCompatActivity {
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
 
         piechart.invalidate();
-        // add animate
         piechart.animateXY(1900, 1900);
 
-
         //bar chart
-        HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
+        HorizontalBarChart barchart = findViewById(R.id.barchart);
         List<BarEntry> valueList = new ArrayList<>();
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
         lp.height = 100 * selectedApps.size();
@@ -203,7 +199,6 @@ public class Report_offline extends AppCompatActivity {
         barchart.getAxisRight().setDrawLabels(false);
 
         barchart.invalidate();
-        // add animate
         barchart.animateY(2300);
 
         /********************************************************************

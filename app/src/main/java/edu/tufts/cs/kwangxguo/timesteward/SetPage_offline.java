@@ -17,22 +17,21 @@ public class SetPage_offline extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_page_offline);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4b);
+        Toolbar toolbar = findViewById(R.id.toolbar4b);
         setSupportActionBar(toolbar);
 
-        button1 = (Button)findViewById(R.id.set_button1b);
-        button2 = (Button)findViewById(R.id.set_button2b);
-        //button3 = (Button)findViewById(R.id.set_button3b);
-        button4 = (Button)findViewById(R.id.set_button4b);
-        button5 = (Button)findViewById(R.id.set_button5b);
-        button6 = (Button)findViewById(R.id.set_button6);
+        button1 = findViewById(R.id.set_button1b);
+        button2 = findViewById(R.id.set_button2b);
+        button4 = findViewById(R.id.set_button4b);
+        button5 = findViewById(R.id.set_button5b);
+        button6 = findViewById(R.id.set_button6);
 
         addListenerOnButton();
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, Report.class);
+        Intent intent = new Intent(this, Report_offline.class);
         startActivity(intent);
     }
 

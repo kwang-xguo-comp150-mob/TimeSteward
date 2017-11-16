@@ -43,7 +43,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         this.settingActivity = SettingActivity.this;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         /*******************************************************
          *             Create App List:
@@ -66,7 +66,7 @@ public class SettingActivity extends AppCompatActivity {
         // create an instance of my customized adapter
         appListAdapter = new AppListAdapter(this, installedApps, packageManager, selectedAppPackageNames);
 
-        ListView listView = (ListView)findViewById(R.id.applist);
+        ListView listView = findViewById(R.id.applist);
         /* set the height of the listView */
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) listView.getLayoutParams();
         lp.height = 150 * installedApps.size();
@@ -76,8 +76,8 @@ public class SettingActivity extends AppCompatActivity {
         /***********************************
          *          Set Time Limit          *
          ************************************/
-        NumberPicker np_minute = (NumberPicker)findViewById(R.id.timer_minute);
-        NumberPicker np_hour = (NumberPicker)findViewById(R.id.timer_hour);
+        NumberPicker np_minute = findViewById(R.id.timer_minute);
+        NumberPicker np_hour = findViewById(R.id.timer_hour);
 
         //first check if there is data for time limit, this is for setting the default value
         int stored_timeLimit_hour = 0;
@@ -121,9 +121,9 @@ public class SettingActivity extends AppCompatActivity {
         /************************************
          *         Deal with Buttons        *
          ************************************/
-        confirm_button = (Button)findViewById(R.id.confirm_button);
+        confirm_button = findViewById(R.id.confirm_button);
 
-        clear_button = (Button)findViewById(R.id.clear_button);
+        clear_button = findViewById(R.id.clear_button);
         clear_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,10 +149,6 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 timeLimit = (time[0] * 60) + time[1];
-//                for (String selectedApp : selectedAppPackageNames)
-//                    Log.d("setting_confirm", "the selected apps are: " + selectedApp);
-//                Log.d("setting_confirm", "time: " + timeLimit);
-
                 if (selectedAppPackageNames.size() == 0) {
                     Toast.makeText(getApplicationContext(),
                             "Please select at least one App",
@@ -163,7 +159,6 @@ public class SettingActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(context, Report.class);
-
                     //use sqlite to store timelimit and selectedapplist
                     Gson gson = new Gson();
                     String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));

@@ -19,13 +19,12 @@ public class SetPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_page);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4b);
+        Toolbar toolbar = findViewById(R.id.toolbar4b);
         setSupportActionBar(toolbar);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();
-        button1 = (Button)findViewById(R.id.set_button1a);
-        button2 = (Button)findViewById(R.id.set_button2a);
-        //button3 = (Button)findViewById(R.id.set_button3a);
+        button1 = findViewById(R.id.set_button1a);
+        button2 = findViewById(R.id.set_button2a);
         button4 = (Button)findViewById(R.id.set_button4a);
         button5 = (Button)findViewById(R.id.set_button5a);
         button7 = (Button)findViewById(R.id.set_button7);
@@ -76,9 +75,6 @@ public class SetPage extends AppCompatActivity {
             public void onClick(View view) {
                 if (FirebaseAuth.getInstance() != null) {
                     FirebaseAuth.getInstance().signOut();
-
-                    //might need to delete the database when user sign out
-                    //context.deleteDatabase("setting.db");
                 }
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
