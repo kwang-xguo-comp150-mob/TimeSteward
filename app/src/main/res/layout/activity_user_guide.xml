@@ -207,7 +207,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="You can choose a intense alarm start time which means before this point, the alarm interval is gentle alarm interval and after that, the alarm interval is intense alarm interval. Both interval is editable too."
+        android:text="You can choose an intense alarm start time which means before this point, the alarm interval is gentle alarm interval and after that, the alarm interval is intense alarm interval. Both interval is editable too."
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -153,6 +153,10 @@ public class SettingActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Please select at least one App",
                             Toast.LENGTH_SHORT).show();
+                } else if (selectedAppPackageNames.size() > 30) {
+                    Toast.makeText(getApplicationContext(),
+                            "Cannot selected more than 30 apps",
+                            Toast.LENGTH_SHORT).show();
                 } else if (timeLimit == 0) {
                     Toast.makeText(getApplicationContext(),
                             "TimeLimit cannot be 0 minute",
