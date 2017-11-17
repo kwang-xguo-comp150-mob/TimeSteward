@@ -92,9 +92,13 @@ public class BackgroundMonitor extends JobService {
         if (db_notification != null) {
             Cursor cursor_notification = db_notification.rawQuery("SELECT * FROM NOTIFICATION", null);
             cursor_notification.moveToFirst();
-            start_point = cursor_notification.getInt(0);
-            gentle_interval = cursor_notification.getInt(1);
-            intense_interval = cursor_notification.getInt(2);
+            try {
+                start_point = cursor_notification.getInt(0);
+                gentle_interval = cursor_notification.getInt(1);
+                intense_interval = cursor_notification.getInt(2);
+            } catch (Exception e) {
+                // fail to read from db
+            }
             Log.d("monitors", "onStart: start: " + start_point + " gentle: " + gentle_interval + " intense: " + intense_interval);
         } else {
             start_point = timeLimit / 2 * 60 * 1000;
