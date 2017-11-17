@@ -1,11 +1,13 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
+import android.app.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -71,20 +73,22 @@ public class MainActivity extends BaseActivity {
         offLineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(dbexist()) {
-                Intent intent = new Intent(context, Report_offline.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(context, SettingActivity.class);
-                startActivity(intent);
-            }
+                sendPermissionRequestNotification();
+                if(dbexist()) {
+                    Intent intent = new Intent(context, Report_offline.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(context, SettingActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            signIn(emailField.getText().toString(), passwordField.getText().toString());
+                sendPermissionRequestNotification();
+                signIn(emailField.getText().toString(), passwordField.getText().toString());
             }
         });
 
@@ -262,5 +266,11 @@ public class MainActivity extends BaseActivity {
         if (cur != null) cur.close();
         Log.d("main", "dbIsEmpty: db is not empty");
         return empty;
+    }
+
+    private void sendPermissionRequestNotification() {
+        Toast.makeText(getApplicationContext(),
+                "You need to grant the usage access through \n\"Setting -> Security -> Apps with usage access -> Time Steward\".",
+                Toast.LENGTH_LONG).show();
     }
 }
