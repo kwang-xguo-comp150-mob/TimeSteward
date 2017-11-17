@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.tufts.cs.kwangxguo.timesteward.Report">
+    tools:context="edu.tufts.cs.kwangxguo.timesteward.Report_offline">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
@@ -102,11 +102,11 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <Button
-        android:id="@+id/lastSeven"
+        android:id="@+id/SignUp"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show last 7 days"
+        android:text="Sign in to see more"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

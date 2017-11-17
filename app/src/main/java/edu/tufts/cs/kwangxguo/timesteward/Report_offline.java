@@ -34,44 +34,38 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Report extends AppCompatActivity {
+public class Report_offline extends AppCompatActivity {
     private PackageManager packageManager;
     private int timeLimit;
     private int timeRemain;
     private int usagetime;
     private ArrayList<ApplicationInfo> selectedApps;
     private ArrayList<String> selectedAppPackageNames;
-    private HashMap<String,Integer> usageTime = new HashMap<String, Integer>();
+    private HashMap<String, Integer> usageTime = new HashMap<String, Integer>();
     private Button lastSeven;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
+        setContentView(R.layout.activity_report_offline);
 
         Toolbar toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
-        lastSeven = findViewById(R.id.lastSeven);
 
         packageManager = getPackageManager();
         selectedApps = new ArrayList<>();
+        lastSeven = findViewById(R.id.SignUp);
 
         SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
         Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
@@ -81,7 +75,8 @@ public class Report extends AppCompatActivity {
         cursor.close();
         db.close();
 
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
         Gson gson = new Gson();
         selectedAppPackageNames = gson.fromJson(selectedAppNames_string, type);
 
@@ -91,28 +86,6 @@ public class Report extends AppCompatActivity {
                 selectedApps.add(app);
             }
         }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // get the current user's uid and current date, this part should be placed to the backgroundMonitor
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("user-time");
-        if (user != null) {
-            String uid = user.getUid();
-            //today
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            // yesterday
-           // String date = new SimpleDateFormat("yyyy-MM-dd").format
-                    //(new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24)));
-            String id = uid + "_" + date;
-            //Log.d("current date",id);
-            User u = new User(90,110);
-            //pushing user to "UserDate" node
-            mDatabase.child(id).setValue(u);
-        }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
         addListenerOnButton();
     }
@@ -125,11 +98,11 @@ public class Report extends AppCompatActivity {
         getUsage();
 
         //piechart
-        PieChart piechart = (PieChart) findViewById(R.id.chart);
+        PieChart piechart = findViewById(R.id.chart);
         //create dataset for the piechart
         List<PieEntry> yvalues = new ArrayList<PieEntry>();
-        yvalues.add(new PieEntry(usagetime,"Total Usage Time"));
-        yvalues.add(new PieEntry(timeRemain,"Remaining Time"));
+        yvalues.add(new PieEntry(usagetime, "Total Usage Time"));
+        yvalues.add(new PieEntry(timeRemain, "Remaining Time"));
         PieDataSet dataSet = new PieDataSet(yvalues, "");
         dataSet.setValueTextSize(12f);
         PieData data = new PieData(dataSet);
@@ -146,11 +119,12 @@ public class Report extends AppCompatActivity {
         Legend legend = piechart.getLegend();
         legend.setTextSize(12f);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+
         piechart.invalidate();
         piechart.animateXY(1900, 1900);
 
         //bar chart
-        HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
+        HorizontalBarChart barchart = findViewById(R.id.barchart);
         List<BarEntry> valueList = new ArrayList<>();
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
         lp.height = 120 * selectedApps.size();
@@ -166,19 +140,19 @@ public class Report extends AppCompatActivity {
                 } else if (usageTime.get(o2.packageName) == null) {
                     return 1;
                 } else {
-                    return - usageTime.get(o2.packageName) + usageTime.get(o1.packageName);
+                    return -usageTime.get(o2.packageName) + usageTime.get(o1.packageName);
                 }
             }
         });
 
-        for (int i = selectedApps.size() - 1; i >= 0; --i){
-                labels[i] = (String)packageManager.getApplicationLabel(selectedApps.get(i));
-                int time = 0;
-                if (usageTime.get(selectedApps.get(i).packageName) != null) {
-                    time = usageTime.get(selectedApps.get(i).packageName);
-                }
-                    BarEntry e = new BarEntry(i, time,labels[i]);
-                    valueList.add(e);
+        for (int i = selectedApps.size() - 1; i >= 0; --i) {
+            labels[i] = (String) packageManager.getApplicationLabel(selectedApps.get(i));
+            int time = 0;
+            if (usageTime.get(selectedApps.get(i).packageName) != null) {
+                time = usageTime.get(selectedApps.get(i).packageName);
+            }
+            BarEntry e = new BarEntry(i, time, labels[i]);
+            valueList.add(e);
         }
 
         BarDataSet barDataSet = new BarDataSet(valueList, "");
@@ -231,8 +205,8 @@ public class Report extends AppCompatActivity {
          *        Schedule Sticky Background Monitor Service
          ********************************************************************/
         JobInfo.Builder builder = new JobInfo.Builder(0, new ComponentName(this, BackgroundMonitor.class));
-        builder.setMinimumLatency((long)5e3);
-        JobScheduler js = (JobScheduler)getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        builder.setMinimumLatency((long) 5e3);
+        JobScheduler js = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         int code = js.schedule(builder.build());
         if (code <= 0) Log.d("monitor", "report: _______ Job scheduling failed --------");
         else Log.d("monitor", "report: -------- Job scheduled ---------");
@@ -275,7 +249,7 @@ public class Report extends AppCompatActivity {
                 Log.d("setting", "getUsage: " + packageName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
                 Log.d("setting", "getUsage: in " + (currTime - beginTime) / 1000 / 3600.0 + " hours");
                 usagetime += us.getTotalTimeInForeground() / 6e4;
-                usageTime.put(packageName, (int)(us.getTotalTimeInForeground() / 6e4));
+                usageTime.put(packageName, (int) (us.getTotalTimeInForeground() / 6e4));
             }
         }
         timeRemain = (timeLimit - usagetime) > 0 ? timeLimit - usagetime : 0;
@@ -295,8 +269,8 @@ public class Report extends AppCompatActivity {
         return true;
     }
 
-    public void onSettingAction(MenuItem mi){
-        Intent intent = new Intent(this, SetPage.class);
+    public void onSettingAction(MenuItem mi) {
+        Intent intent = new Intent(this, SetPage_offline.class);
         startActivity(intent);
     }
 
@@ -305,8 +279,8 @@ public class Report extends AppCompatActivity {
         lastSeven.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Intent intent = new Intent(context, Last_seven_days.class);
-            startActivity(intent);
+                Intent intent = new Intent(context, MainActivity.class);
+                startActivity(intent);
             }
         });
     }

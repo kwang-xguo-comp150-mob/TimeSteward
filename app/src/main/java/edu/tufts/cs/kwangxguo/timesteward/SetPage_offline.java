@@ -8,33 +8,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+public class SetPage_offline extends AppCompatActivity {
 
-public class SetPage extends AppCompatActivity {
-    Button button1, button2, button3, button4, button5, button6, button7;
+    Button button1, button2, button3, button4, button5, button6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_page);
+        setContentView(R.layout.activity_set_page_offline);
 
         Toolbar toolbar = findViewById(R.id.toolbar4b);
         setSupportActionBar(toolbar);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String email = user.getEmail();
-        button1 = findViewById(R.id.set_button1a);
-        button2 = findViewById(R.id.set_button2a);
-        button4 = (Button)findViewById(R.id.set_button4a);
-        button5 = (Button)findViewById(R.id.set_button5a);
-        button7 = (Button)findViewById(R.id.set_button7);
-        button7.setText("Sign Out (" + email+")");
+
+        button1 = findViewById(R.id.set_button1b);
+        button2 = findViewById(R.id.set_button2b);
+        button4 = findViewById(R.id.set_button4b);
+        button5 = findViewById(R.id.set_button5b);
+        button6 = findViewById(R.id.set_button6);
+
         addListenerOnButton();
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, Report.class);
+        Intent intent = new Intent(this, Report_offline.class);
         startActivity(intent);
     }
 
@@ -47,6 +44,7 @@ public class SetPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +52,7 @@ public class SetPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,12 +69,9 @@ public class SetPage extends AppCompatActivity {
             }
         });
 
-        button7.setOnClickListener(new View.OnClickListener() {
+        button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (FirebaseAuth.getInstance() != null) {
-                    FirebaseAuth.getInstance().signOut();
-                }
                 Intent intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
             }
