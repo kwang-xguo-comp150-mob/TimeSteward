@@ -80,9 +80,9 @@ public class Notification extends AppCompatActivity {
         //the interval should be stored in sqlite
 
         final ContentValues value = new ContentValues();
-        value.put("start_point", 0);
-        value.put("gentle_interval", 0);
-        value.put("intense_interval", 0);
+        value.put("start_point", default_startPoint);
+        value.put("gentle_interval", 1);
+        value.put("intense_interval", 1);
 
         sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             int progressChangedValue = 0;

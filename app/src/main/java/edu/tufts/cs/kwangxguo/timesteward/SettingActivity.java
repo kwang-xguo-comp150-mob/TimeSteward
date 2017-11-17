@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 public class SettingActivity extends AppCompatActivity {
@@ -161,8 +163,23 @@ public class SettingActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "TimeLimit cannot be 0 minute",
                             Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     Intent intent = new Intent(context, Report.class);
+                    //use sqlite to store timelimit and selectedapplist
+                    Gson gson = new Gson();
+                    String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));
+                    SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
+                    db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
+                    db.execSQL("DELETE FROM Setting");
+                    ContentValues value = new ContentValues();
+                    value.put("app_package_name_list", gsonString);
+                    value.put("time_limit", timeLimit);
+                    db.insert("Setting", null, value);
+                    db.close();
+
+                    startActivity(intent);
+                } else { //offline
+                    Intent intent = new Intent(context, Report_offline.class);
                     //use sqlite to store timelimit and selectedapplist
                     Gson gson = new Gson();
                     String gsonString = gson.toJson(new ArrayList<String>(selectedAppPackageNames));

@@ -153,7 +153,7 @@ public class Report extends AppCompatActivity {
         HorizontalBarChart barchart = (HorizontalBarChart) findViewById(R.id.barchart);
         List<BarEntry> valueList = new ArrayList<>();
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) barchart.getLayoutParams();
-        lp.height = 100 * selectedApps.size();
+        lp.height = 120 * selectedApps.size();
         barchart.setLayoutParams(lp);
         String[] labels = new String[selectedApps.size()];
 
