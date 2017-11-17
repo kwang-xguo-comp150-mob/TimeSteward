@@ -92,28 +92,6 @@ public class Report extends AppCompatActivity {
             }
         }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // get the current user's uid and current date, this part should be placed to the backgroundMonitor
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("user-time");
-        if (user != null) {
-            String uid = user.getUid();
-            //today
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            // yesterday
-           // String date = new SimpleDateFormat("yyyy-MM-dd").format
-                    //(new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24)));
-            String id = uid + "_" + date;
-            //Log.d("current date",id);
-            User u = new User(90,110);
-            //pushing user to "UserDate" node
-            mDatabase.child(id).setValue(u);
-        }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
         addListenerOnButton();
     }
 

@@ -22,12 +22,18 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -147,6 +153,24 @@ public class BackgroundMonitor extends JobService {
         int code = js.schedule(builder.build());
         if (code <= 0) Log.d("monitor", "onCreate: _______ Job scheduling failed --------");
         Log.d("monitor", "onCreate: -------- Job scheduled after " + minLatency / 1000 / 60 + " minutes ---------");
+
+        //upload data to firebase
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // get the current user's uid and current date, this part should be placed to the backgroundMonitor
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference("user-time");
+        if (user != null) {
+            String uid = user.getUid();
+            //today
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            String id = uid + "_" + date;
+            User u = new User(totalTime,timeLimit);
+            //pushing user to "UserDate" node
+            mDatabase.child(id).setValue(u);
+        }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     public void getUsage() {
