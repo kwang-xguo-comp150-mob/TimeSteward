@@ -105,10 +105,12 @@ public class BackgroundMonitor extends JobService {
 
         //build notification
         if (selectedPackageNames.contains(currentRunningPackageName)) {
+            String content = timeRemaining < 0 ? "Time is up !" : "Reminder";
+
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_launcher_round2)
-                            .setContentTitle("Time is up !")
+                            .setContentTitle(content)
                             .setContentText("You have spent your time on your phone for " + totalTime + " minutes.")
                             .setDefaults(Notification.DEFAULT_ALL) // must requires VIBRATE permission
                             .setPriority(NotificationCompat.PRIORITY_HIGH); //must give priority to High, Max which will considered as heads-up notification
