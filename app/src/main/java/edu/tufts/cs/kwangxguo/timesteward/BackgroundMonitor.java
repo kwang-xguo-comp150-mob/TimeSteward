@@ -90,6 +90,11 @@ public class BackgroundMonitor extends JobService {
             gentle_interval = cursor_notification.getInt(1);
             intense_interval = cursor_notification.getInt(2);
             Log.d("monitors", "onStart: start: " + start_point + " gentle: " + gentle_interval + " intense: " + intense_interval);
+        } else {
+            start_point = timeLimit/2;
+            gentle_interval = timeLimit/4;
+            intense_interval = timeLimit/8;
+            Log.d("monitors_default", "onStart: start: " + start_point + " gentle: " + gentle_interval + " intense: " + intense_interval);
         }
 
         //build notification
