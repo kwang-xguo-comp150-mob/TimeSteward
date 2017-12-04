@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -196,17 +197,16 @@ public class SettingActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.report_menu, menu);
+        getMenuInflater().inflate(R.menu.info_menu, menu);
         return true;
     }
 
     public void onSettingAction(MenuItem mi){
-        Intent intent = new Intent(this, SetPage.class);
+        Intent intent = new Intent(this, UserGuide.class);
         startActivity(intent);
     }
 
