@@ -95,7 +95,9 @@ public class MainActivity extends BaseActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            register(emailField.getText().toString(), passwordField.getText().toString());
+//            register(emailField.getText().toString(), passwordField.getText().toString());
+                Intent intent = new Intent(context, SignUp.class);
+                startActivity(intent);
             }
         });
 
@@ -194,42 +196,6 @@ public class MainActivity extends BaseActivity {
                 }
             });
         // [END sign_in_with_email]
-    }
-
-    private void register(String email, String password) {
-        final Context context = this;
-        Log.d("", "createAccount:" + email);
-        if (!validateForm()) {
-            return;
-        }
-
-        showProgressDialog();
-
-        // [START create_user_with_email]
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("Good", "createUserWithEmail:success");
-                    FirebaseUser user = mAuth.getCurrentUser();
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("Bad", "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(MainActivity.this, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                // [START_EXCLUDE]
-                hideProgressDialog();
-                // [END_EXCLUDE]
-                if (task.isSuccessful()){
-                    Intent intent = new Intent(context, SettingActivity.class);
-                    startActivity(intent);
-                }
-                }
-            });
-        // [END create_user_with_email]
     }
 
     private boolean dbexist() {

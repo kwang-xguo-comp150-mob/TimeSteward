@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +26,12 @@
         </activity>
         <activity
             android:name=".SettingActivity"
-            android:screenOrientation="portrait"
             android:label="Setting"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Report"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Report"
+            android:screenOrientation="portrait" />
         <activity android:name=".SetPage" />
         <activity android:name=".About" />
 
@@ -43,14 +45,17 @@
             android:name="io.fabric.ApiKey"
             android:value="0dac5bbe63ab62afb41adfd30d7c43905a4fa0d6" />
 
-        <activity android:name=".UserGuide"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UserGuide"
+            android:screenOrientation="portrait" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".SetPage_offline" />
-        <activity android:name=".Report_offline"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Report_offline"
+            android:screenOrientation="portrait" />
         <activity android:name=".Last_seven_days" />
-        <activity android:name=".Notification"></activity>
+        <activity android:name=".Notification" />
+        <activity android:name=".SignUp"></activity>
     </application>
 
 </manifest>
