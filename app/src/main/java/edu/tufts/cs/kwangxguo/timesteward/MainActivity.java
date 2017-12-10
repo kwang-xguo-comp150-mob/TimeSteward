@@ -1,13 +1,11 @@
 package edu.tufts.cs.kwangxguo.timesteward;
 
-import android.app.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -95,7 +93,6 @@ public class MainActivity extends BaseActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//            register(emailField.getText().toString(), passwordField.getText().toString());
                 Intent intent = new Intent(context, SignUp.class);
                 startActivity(intent);
             }
