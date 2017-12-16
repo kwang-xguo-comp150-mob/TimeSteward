@@ -45,7 +45,7 @@
         android:layout_marginBottom="227dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="TimeSteward 1.0"
+        android:text="TimeSteward 1.11"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"

@@ -73,7 +73,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Go to home page. If you have an account already, just input your registed email and password then click Sign In. If you don't have, click Sign Up after you input them."
+        android:text="First, make sure you've already done the following step: go to Setting -> Security -> Apps with usage access -> Time Steward. In the homepage, if you have an account already, just input your registed email and password then click Sign In. If you don't have, click Sign Up after you input them."
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
