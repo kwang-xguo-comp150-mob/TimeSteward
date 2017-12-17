@@ -8,8 +8,8 @@ android {
         applicationId "edu.tufts.cs.kwangxguo.timesteward"
         minSdkVersion 23
         targetSdkVersion 26
-        versionCode 3
-        versionName "1.11"
+        versionCode 4
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
