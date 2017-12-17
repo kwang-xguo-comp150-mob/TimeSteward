@@ -11,6 +11,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -74,20 +75,28 @@ public class Report extends AppCompatActivity {
         selectedApps = new ArrayList<>();
 
         SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
-        Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
-        cursor.moveToFirst();
-        String selectedAppNames_string = cursor.getString(0);
-        timeLimit = cursor.getInt(1);
-        cursor.close();
-        db.close();
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
+            cursor.moveToFirst();
+            String selectedAppNames_string = cursor.getString(0);
+            timeLimit = cursor.getInt(1);
+            cursor.close();
+            db.close();
 
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        Gson gson = new Gson();
-        selectedAppPackageNames = gson.fromJson(selectedAppNames_string, type);
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            Gson gson = new Gson();
+            selectedAppPackageNames = gson.fromJson(selectedAppNames_string, type);
+        } catch (Exception e) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS Setting(app_package_name_list, time_limit);");
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+            return;
+        }
 
         List<ApplicationInfo> apps = packageManager.getInstalledApplications(0);
         for (ApplicationInfo app : apps) {
-            if (selectedAppPackageNames.contains(app.packageName)) {
+            if (selectedAppPackageNames != null && selectedAppPackageNames.contains(app.packageName)) {
                 selectedApps.add(app);
             }
         }
@@ -249,7 +258,7 @@ public class Report extends AppCompatActivity {
             UsageStats us = entry.getValue();
             Log.d("report", "getUsage: " + packageName + "  " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
             if (us.getTotalTimeInForeground() < 1e4) continue;
-            if (selectedAppPackageNames.contains(packageName)) {
+            if (selectedAppPackageNames != null && selectedAppPackageNames.contains(packageName)) {
                 Log.d("setting", "getUsage: " + packageName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
                 Log.d("setting", "getUsage: in " + (currTime - beginTime) / 1000 / 3600.0 + " hours");
                 usagetime += us.getTotalTimeInForeground() / 6e4;

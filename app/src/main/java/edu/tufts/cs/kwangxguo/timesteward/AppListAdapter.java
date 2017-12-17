@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
+
 class AppListAdapter extends ArrayAdapter {
 
     private PackageManager pm;
@@ -47,17 +49,24 @@ class AppListAdapter extends ArrayAdapter {
             db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
         } catch(SQLiteException e) {
             Log.d("setting", "AppListAdapter: db doesn't exist !!!!!!!!");
+//            db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
         }
         if (db != null) {
-            Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
-            cursor.moveToFirst();
-            String selectedAppNames_string = cursor.getString(0);
-            cursor.close();
-            db.close();
+            try {
+                Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
+                cursor.moveToFirst();
+                String selectedAppNames_string = cursor.getString(0);
+                cursor.close();
+                db.close();
 
-            Type type = new TypeToken<ArrayList<String>>() {}.getType();
-            Gson gson = new Gson();
-            packageNamesInDB.addAll((ArrayList<String>)gson.fromJson(selectedAppNames_string, type));
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                Gson gson = new Gson();
+                packageNamesInDB.addAll((ArrayList<String>) gson.fromJson(selectedAppNames_string, type));
+            } catch (Exception e) {
+                // table is empty
+                Log.d("setting", "AppListAdapter: db is empty !");
+            }
         }
     }
 

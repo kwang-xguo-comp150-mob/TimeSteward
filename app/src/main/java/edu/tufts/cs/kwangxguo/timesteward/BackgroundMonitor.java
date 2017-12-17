@@ -58,18 +58,23 @@ public class BackgroundMonitor extends JobService {
         this.powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
 
         // get selected package name list and time limit from db.
-        SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
-        Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
-        cursor.moveToFirst();
-        String selectedAppNames_string = cursor.getString(0);
-        this.timeLimit = cursor.getInt(1);
-        cursor.close();
-        db.close();
+        try {
+            SQLiteDatabase db = openOrCreateDatabase("setting.db", Context.MODE_PRIVATE, null);
+            Cursor cursor = db.rawQuery("SELECT * FROM Setting", null);
+            cursor.moveToFirst();
+            String selectedAppNames_string = cursor.getString(0);
+            this.timeLimit = cursor.getInt(1);
+            cursor.close();
+            db.close();
 
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        Gson gson = new Gson();
-        selectedPackageNames = gson.fromJson(selectedAppNames_string, type);
-
+            Type type = new TypeToken<ArrayList<String>>() {}.getType();
+            Gson gson = new Gson();
+            selectedPackageNames = gson.fromJson(selectedAppNames_string, type);
+        } catch (Exception e) {
+            // if db not exit or is empty, exit background monitor
+            Log.d("monitor", "onCreate: ----------- db not exist or empty ----------");
+            return;
+        }
     }
 
     @Override
@@ -108,7 +113,7 @@ public class BackgroundMonitor extends JobService {
         }
 
         //build notification
-        if (selectedPackageNames.contains(currentRunningPackageName)) {
+        if (selectedPackageNames != null && selectedPackageNames.contains(currentRunningPackageName)) {
             String content = timeRemaining < 0 ? "Time is up !" : "Reminder";
 
             NotificationCompat.Builder builder =
@@ -201,7 +206,7 @@ public class BackgroundMonitor extends JobService {
             }
 
             if (us.getTotalTimeInForeground() < 1e4) continue;
-            if (selectedPackageNames.contains(packageName)) {
+            if (selectedPackageNames != null && selectedPackageNames.contains(packageName)) {
                 Log.d("monitor", "testUsage: " + packageName + "  usage time: " + us.getTotalTimeInForeground() / 6e4 + " minutes.");
                 totalTime += us.getTotalTimeInForeground() / 6e4;
                 Log.d("monitor", "getUsage: Total time: " + totalTime + " minutes. ");
